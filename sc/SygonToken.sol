@@ -94,6 +94,8 @@ contract SYGONtoken {
         balances[addrFrom] -= nAmount;
         balances[addrTo] += nAmount;
         
+        allowed[addrFrom][msg.sender] -= nAmount;
+        
         bRetSuccess = true;
         
         return bRetSuccess;
