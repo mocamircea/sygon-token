@@ -66,24 +66,6 @@ contract SYGONtoken {
         return bRetSuccess;
     }
     
-    function transferTokenIssue(address addrTo, uint256 nAmount, uint32 nProjectID, uint32 nExpDestination, uint8 nInstallmentNumber) public returns (bool bTransferTokenIssueSuccess) {
-        bool bRetSuccess = false;
-        
-        require(msg.sender == addrInstantiator);
-        require(addrTo != addrInstantiator);
-        require(nAmount > 0);
-        require(balances[msg.sender] >= nAmount);
-        
-        balances[msg.sender] -= nAmount;
-        balances[addrTo] += nAmount;
-            
-        emit LogTransferTokenIssue(msg.sender, addrTo, nAmount, nProjectID, nExpDestination, nInstallmentNumber);
-        
-        bRetSuccess = true;
-        
-        return bRetSuccess;
-    }
-    
     function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public returns (bool bTransferFromSuccess) {
         bool bRetSuccess = false;
         
@@ -97,6 +79,24 @@ contract SYGONtoken {
         balances[addrTo] += nAmount;
         
         allowed[addrFrom][msg.sender] -= nAmount;
+        
+        bRetSuccess = true;
+        
+        return bRetSuccess;
+    }
+    
+    function transferAsTokenReleaseFromTotalSupply(address addrTo, uint256 nAmount, uint32 nProjectID, uint32 nExpDestination, uint8 nInstallmentNumber) public returns (bool bTransferTokenIssueSuccess) {
+        bool bRetSuccess = false;
+        
+        require(msg.sender == addrInstantiator);
+        require(addrTo != addrInstantiator);
+        require(nAmount > 0);
+        require(balances[msg.sender] >= nAmount);
+        
+        balances[msg.sender] -= nAmount;
+        balances[addrTo] += nAmount;
+            
+        emit LogTransferTokenIssue(msg.sender, addrTo, nAmount, nProjectID, nExpDestination, nInstallmentNumber);
         
         bRetSuccess = true;
         
