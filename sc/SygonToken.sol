@@ -1,18 +1,20 @@
 pragma solidity 0.4.25;
 
 contract SYGONtoken {
-    mapping (address => uint256) balances;
-    
-    mapping (address => mapping(address => uint256)) allowed;  // Delegate spenders
-    
-    // Initial supply and quantities
-    uint256 constant nInitialTotalSupply = 7500000000;
-    uint256 constant nMaxTotalBurnableAmount = 6000000000; // Maximum 80% of the total initial supply
-    uint256 nTotalBurned;
-    
     address addrInstantiator;
     
-    uint8 constant nNumberOfDecimals = 18; 
+    uint8 nTokenDecimals;
+    string public sName;
+    string public sSymbol;
+    
+    mapping (address => uint256) balances;
+    
+    mapping (address => mapping(address => uint256)) allowances;  // Delegate spenders
+    
+    // Initial supply and quantities
+    uint256 nInitialTotalSupply;
+    uint256 nMaxTotalBurnableAmount;
+    uint256 nTotalBurned;
     
     // Events
     event LogApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
@@ -22,13 +24,17 @@ contract SYGONtoken {
     event LogBurn(address indexed addrBurnFrom, uint256 nAmount);
     
     constructor() public {
-        nTotalBurned = 0;
-        
         addrInstantiator = msg.sender;
+        nTokenDecimals = 18;
+        nInitialTotalSupply = 7500000000 * (uint256(10) ** nTokenDecimals);
+        nMaxTotalBurnableAmount = 6000000000 * (uint256(10) ** nTokenDecimals);  // Maximum 80% of the total initial supply
+        nTotalBurned = 0;
         balances[addrInstantiator] = nInitialTotalSupply;
+        sName = "SYGON";
+        sSymbol = "SYGON";
     }
     
-    function getInstantiator() public view returns(address addrOwnrAddr){
+    function getInstantiator() public view returns(address addrInstantiatorAddress){
         return addrInstantiator;
     }
     
@@ -41,7 +47,7 @@ contract SYGONtoken {
         require(msg.sender != addrInstantiator);
         require(addrDelegateSpender != addrInstantiator);
         
-        allowed[msg.sender][addrDelegateSpender] = nAmount;
+        allowances[msg.sender][addrDelegateSpender] = nAmount;
         
         emit LogApproveDelegateSpender(msg.sender, addrDelegateSpender, nAmount);
         
@@ -73,12 +79,12 @@ contract SYGONtoken {
         require(addrTo != addrInstantiator);
         require(nAmount > 0);
         require(balances[addrFrom] >= nAmount);
-        require(allowed[addrFrom][msg.sender] >= nAmount);
+        require(allowances[addrFrom][msg.sender] >= nAmount);
         
         balances[addrFrom] -= nAmount;
         balances[addrTo] += nAmount;
         
-        allowed[addrFrom][msg.sender] -= nAmount;
+        allowances[addrFrom][msg.sender] -= nAmount;
         
         bRetSuccess = true;
         
@@ -104,19 +110,11 @@ contract SYGONtoken {
     }
     
     function getAllowanceForDelegateSpender(address addrOwner, address addrDelegateSpender) public view returns (uint256 nAmount) {
-        return allowed[addrOwner][addrDelegateSpender];
+        return allowances[addrOwner][addrDelegateSpender];
     }
     
-    function getTokenName() public pure returns (string sTokenName) {
-        return "SYGON";
-    }
-    
-    function getTokenSymbol() public pure returns (string sTokenSymbol) {
-        return "SYGON";
-    }
-    
-    function getNumberOfDecimals() public pure returns (uint8 nDecimals) {
-        return nNumberOfDecimals;
+    function getTokenDecimals() public view returns (uint8 nDecimals) {
+        return nTokenDecimals;
     }
     
     // SYGON token burn
@@ -137,7 +135,7 @@ contract SYGONtoken {
     
     // Supplies and Quantities
     
-    function totalInitialSupply() public pure returns(uint256 nTotalSupply){
+    function totalInitialSupply() public view returns(uint256 nTotalSupply){
         return nInitialTotalSupply;
     }
     
