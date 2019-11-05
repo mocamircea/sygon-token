@@ -23,6 +23,31 @@ contract SYGONtoken {
     event LogTransferFrom(address indexed addrFrom, address indexed addrTo, address indexed sMsgSender);
     event LogBurn(address indexed addrBurnFrom, uint256 nAmount);
     
+    modifier OnlyInstantiator () {
+        require (msg.sender == addrInstantiator);
+        _;
+    }
+    
+    modifier ForbidInstantiator () {
+        require (msg.sender != addrInstantiator);
+        _;
+    }
+    
+    modifier PreventBurn (address addr) {
+        require (addr != address(0));
+        _;
+    }
+    
+    modifier NotToInstantiator (address addr) {
+        require (addr != addrInstantiator);
+        _;
+    }
+    
+    modifier Positive (uint256 nAmount) {
+        require(nAmount > 0);
+        _;
+    }
+    
     constructor() public {
         addrInstantiator = msg.sender;
         nTokenDecimals = 18;
@@ -42,10 +67,10 @@ contract SYGONtoken {
         return balances[addrTokenOwner];
     }
     
-    function approve(address addrDelegateSpender, uint256 nAmount) public returns(bool bApproveSuccess) {
+    function approve(address addrDelegateSpender, uint256 nAmount) public 
+        ForbidInstantiator NotToInstantiator(addrDelegateSpender) returns(bool bApproveSuccess) {
+        
         require(msg.sender != addrDelegateSpender);
-        require(msg.sender != addrInstantiator);
-        require(addrDelegateSpender != addrInstantiator);
         
         allowances[msg.sender][addrDelegateSpender] = nAmount;
         
@@ -54,13 +79,11 @@ contract SYGONtoken {
         return true;
     }
     
-    function transfer(address addrTo, uint256 nAmount) public returns(bool bTransferSuccess) {
+    function transfer(address addrTo, uint256 nAmount) public 
+        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount) returns(bool bTransferSuccess) {
+            
         bool bRetSuccess = false;
         
-        require(msg.sender != addrInstantiator);
-        require(addrTo != address(0));
-        require(addrTo != addrInstantiator);
-        require(nAmount > 0);
         require(balances[msg.sender] >= nAmount);
         
         balances[msg.sender] -= nAmount;
@@ -73,13 +96,11 @@ contract SYGONtoken {
         return bRetSuccess;
     }
     
-    function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public returns (bool bTransferFromSuccess) {
+    function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public 
+        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount) returns (bool bTransferFromSuccess) {
+            
         bool bRetSuccess = false;
         
-        require(msg.sender != addrInstantiator);
-        require(addrTo != address(0));
-        require(addrTo != addrInstantiator);
-        require(nAmount > 0);
         require(balances[addrFrom] >= nAmount);
         require(allowances[addrFrom][msg.sender] >= nAmount);
         
@@ -88,19 +109,18 @@ contract SYGONtoken {
         
         allowances[addrFrom][msg.sender] -= nAmount;
         
+        emit LogTransferFrom(addrFrom, addrTo, msg.sender);
         
         bRetSuccess = true;
         
         return bRetSuccess;
     }
     
-    function transferAsTokenReleaseFromTotalSupply(address addrTo, uint256 nAmount, uint32 nProjectID, uint32 nExpDestination, uint8 nInstallmentNumber) public returns (bool bTransferTokenIssueSuccess) {
+    function transferAsTokenReleaseFromTotalSupply (address addrTo, uint256 nAmount, uint32 nProjectID, uint32 nExpDestination, uint8 nInstallmentNumber) 
+        OnlyInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount) public returns (bool bTransferTokenReleaseSuccess) {
+        
         bool bRetSuccess = false;
         
-        require(msg.sender == addrInstantiator);
-        require(addrTo != address(0));
-        require(addrTo != addrInstantiator);
-        require(nAmount > 0);
         require(balances[msg.sender] >= nAmount);
         
         balances[msg.sender] -= nAmount;
@@ -123,8 +143,9 @@ contract SYGONtoken {
     
     // SYGON token burn
     
-    function burn(uint256 nAmountToBurn) public returns (bool bBurnSuccess) {
-        require (msg.sender != addrInstantiator);
+    function burn(uint256 nAmountToBurn) public 
+        ForbidInstantiator returns (bool bBurnSuccess) {
+        
         require (balances[msg.sender] >= nAmountToBurn);
         require (nAmountToBurn + nTotalBurned <= nMaxTotalBurnableAmount);
         
