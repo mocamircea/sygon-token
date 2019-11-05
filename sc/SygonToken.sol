@@ -58,6 +58,7 @@ contract SYGONtoken {
         bool bRetSuccess = false;
         
         require(msg.sender != addrInstantiator);
+        require(addrTo != address(0));
         require(addrTo != addrInstantiator);
         require(nAmount > 0);
         require(balances[msg.sender] >= nAmount);
@@ -76,6 +77,7 @@ contract SYGONtoken {
         bool bRetSuccess = false;
         
         require(msg.sender != addrInstantiator);
+        require(addrTo != address(0));
         require(addrTo != addrInstantiator);
         require(nAmount > 0);
         require(balances[addrFrom] >= nAmount);
@@ -86,6 +88,7 @@ contract SYGONtoken {
         
         allowances[addrFrom][msg.sender] -= nAmount;
         
+        
         bRetSuccess = true;
         
         return bRetSuccess;
@@ -95,6 +98,7 @@ contract SYGONtoken {
         bool bRetSuccess = false;
         
         require(msg.sender == addrInstantiator);
+        require(addrTo != address(0));
         require(addrTo != addrInstantiator);
         require(nAmount > 0);
         require(balances[msg.sender] >= nAmount);
