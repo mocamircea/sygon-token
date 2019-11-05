@@ -3,6 +3,7 @@
 <p>
 <b>Name:</b> SYGON <br/>
 <b>Symbol:</b> SYGON <br/>
+<b>Type:</b> ERC20<br/>
 <b>Decimals:</b> 18 <br/>
 <b>Total Initial Supply (TIS):</b> fixed, 7500000000. This is the maximum amount that can be released ever.<br/>
 <b>Total Released Quantity (TRQ):</b> total amount ever released from TIS.<br/>
