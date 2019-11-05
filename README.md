@@ -19,10 +19,22 @@
 <h3>1.1 Transfer</h3>
 <p>
   <b><i>transfer</i></b> and <b><i>transferFrom</i></b> as of ERC20
-<br/>
+<br/><br/>
   <b><i>transferAsTokenReleaseFromTotalSupply</i></b> <br/>
-The Instatiator transfers SYGON tokens as token release action from TIS.<br/>
-Token release input: Beneficiary, Amount, Project ID, Expenditure Destination, Installment Number.<br/>
+The Instantiator transfers SYGON tokens as token release action from TIS.<br/>
+Token release input: Benefficiary, Amount, Project ID, Expenditure Destination, Installment Number.<br/>
+  <br/>
+  <b>Benefficiary</b><br/>
+  The address to receive the transfer of the Amount.<br/>
+  <b>Amount</b><br/>
+  The amount of SYGON tokens being released from TRSR.<br/>
+  <b>Project ID</b><br/>
+  The identifier of the project being developed for the SYGON technology.<br/>
+  <b>Expenditure Destination</b><br/>
+  The identifier of the expenditure destination of the current transfer.<br/>
+  <b>Installment Number</b><br/>
+  The installment number of the current transfer for a particular Project ID and Expenditure Destination.<br/>
+  
   </p>
   
 <h3>1.2 Fractionable</h3>
