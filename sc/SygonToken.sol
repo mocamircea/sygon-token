@@ -12,13 +12,14 @@ contract SYGONtoken {
     
     address addrInstantiator;
     
-    uint8 nNumberOfDecimals = 18; 
+    uint8 constant nNumberOfDecimals = 18; 
     
     // Events
     event LogApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event LogTransfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
     event LogTransferTokenIssue(address addrSender, address indexed addrTo, uint256 nTransferredAmount, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
     event LogTransferFrom(address indexed addrFrom, address indexed addrTo, address indexed sMsgSender);
+    event LogBurn(address indexed addrBurnFrom, uint256 nAmount);
     
     constructor() public {
         nTotalBurned = 0;
@@ -114,7 +115,7 @@ contract SYGONtoken {
         return "SYGON";
     }
     
-    function getNumberOfDecimals() public view returns (uint8 nDecimals) {
+    function getNumberOfDecimals() public pure returns (uint8 nDecimals) {
         return nNumberOfDecimals;
     }
     
@@ -127,6 +128,8 @@ contract SYGONtoken {
         
         balances[msg.sender] -= nAmountToBurn;
         nTotalBurned += nAmountToBurn;
+        
+        emit LogBurn(msg.sender, nAmountToBurn);
         
         return true;
     }
