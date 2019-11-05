@@ -27,10 +27,6 @@ contract SYGONtoken {
         balances[addrInstantiator] = nInitialTotalSupply;
     }
     
-    function totalInitialSupply() public pure returns(uint256 nTotalSupply){
-        return nInitialTotalSupply;
-    }
-    
     function getInstantiator() public view returns(address addrOwnrAddr){
         return addrInstantiator;
     }
@@ -122,9 +118,7 @@ contract SYGONtoken {
         return nNumberOfDecimals;
     }
     
-    function getSupplyInCirculation() public view returns (uint256 nTotalSYGONTokenInCirculation) {
-        return (nInitialTotalSupply - balances[addrInstantiator]) - nTotalBurned;
-    }
+    // SYGON token burn
     
     function burn(uint256 nAmountToBurn) public returns (bool bBurnSuccess) {
         require (msg.sender != addrInstantiator);
@@ -137,7 +131,22 @@ contract SYGONtoken {
         return true;
     }
     
-    function getTotalBurned() public view returns (uint256 nTotalSYGONTokenBurned) {
+    
+    // Supplies and Quantities
+    
+    function totalInitialSupply() public pure returns(uint256 nTotalSupply){
+        return nInitialTotalSupply;
+    }
+    
+    function getSupplyInCirculation() public view returns (uint256 nTotalSYGONTokenInCirculation) {
+        return (nInitialTotalSupply - balances[addrInstantiator]) - nTotalBurned;
+    }
+    
+    function getRemainingIssuableSupply() public view returns (uint256 nTotalSYGONTokenRemainingIssuable) {
+        return balances[addrInstantiator];
+    }
+    
+    function getTotalBurned() public view returns (uint256 nTotalSYGONTokenBurnedQuantity) {
         return nTotalBurned;
     }
 }
