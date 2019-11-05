@@ -14,6 +14,25 @@
 </p>
 
 <h2>1 Features</h2>
-<p>Fungible, Fractionable, Delegate transfer</p>
+<p>Fungible, Fractionable, Burnable </p>
 
 <h3>1.1 Transfer</h3>
+<p>
+<b>transfer<b/> and <b>transferFrom</b> as of ERC20
+<br/>
+<b>transferAsTokenReleaseFromTotalSupply</b> <br/>
+The Instatiator transfers SYGON tokens as token release action from TIS.<br/>
+Token release input: Beneficiary, Amount, Project ID, Expenditure Destination, Installment Number.<br/>
+  </p>
+  
+<h3>1.2 Fractionable</h3>
+<p>
+The smallest transferrable quantity: 0.000000000000000001 SYGON tokens
+  </p>
+
+<h3>1.3 Burnable</h3>
+<p> The SYGON token can be burned. <br/>
+The burn operation can only be applied to the released quantity of SYGON tokens. <br/>
+The burn operation is limited to a maximum (TMBQ). <br/>
+The burn operation is restricted for the Instantiator. <br/>
+  </p>
