@@ -3,9 +3,12 @@ pragma solidity 0.4.25;
 contract SYGONtoken {
     mapping (address => uint256) balances;
     
-    mapping (address => mapping(address => uint256)) allowed;
+    mapping (address => mapping(address => uint256)) allowed;  // Delegate spenders
     
-    uint256 nTotalSYGONTokenSupply = 7500000000;
+    // Initial supply and quantities
+    uint256 constant nInitialTotalSupply = 7500000000;
+    uint256 constant nMaxTotalBurnableAmount = 6000000000; // Maximum 80% of the total initial supply
+    uint256 nTotalBurned;
     
     address addrInstantiator;
     
@@ -17,13 +20,15 @@ contract SYGONtoken {
     event LogTransferTokenIssue(address addrSender, address indexed addrTo, uint256 nTransferredAmount, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
     event LogTransferFrom(address indexed addrFrom, address indexed addrTo, address indexed sMsgSender);
     
-    constructor() public payable{
+    constructor() public {
+        nTotalBurned = 0;
+        
         addrInstantiator = msg.sender;
-        balances[addrInstantiator] = nTotalSYGONTokenSupply;
+        balances[addrInstantiator] = nInitialTotalSupply;
     }
     
-    function totalSupply() public view returns(uint256 nTotalSupply){
-        return nTotalSYGONTokenSupply;
+    function totalInitialSupply() public pure returns(uint256 nTotalSupply){
+        return nInitialTotalSupply;
     }
     
     function getInstantiator() public view returns(address addrOwnrAddr){
@@ -117,8 +122,23 @@ contract SYGONtoken {
         return nNumberOfDecimals;
     }
     
-    function getTotalSYGONTokenInCirculation() public view returns (uint256 nTotalSYGONTokenInCirculation) {
-        return nTotalSYGONTokenSupply - balances[addrInstantiator];
+    function getSupplyInCirculation() public view returns (uint256 nTotalSYGONTokenInCirculation) {
+        return (nInitialTotalSupply - balances[addrInstantiator]) - nTotalBurned;
+    }
+    
+    function burn(uint256 nAmountToBurn) public returns (bool bBurnSuccess) {
+        require (msg.sender != addrInstantiator);
+        require (balances[msg.sender] >= nAmountToBurn);
+        require (nAmountToBurn + nTotalBurned <= nMaxTotalBurnableAmount);
+        
+        balances[msg.sender] -= nAmountToBurn;
+        nTotalBurned += nAmountToBurn;
+        
+        return true;
+    }
+    
+    function getTotalBurned() public view returns (uint256 nTotalSYGONTokenBurned) {
+        return nTotalBurned;
     }
 }
 
