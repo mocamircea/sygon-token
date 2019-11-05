@@ -1,2 +1,2 @@
-# sygon_token
+# SYGON token
 The SYGON token
