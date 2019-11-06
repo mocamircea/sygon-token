@@ -16,11 +16,18 @@ contract SYGONtoken {
     uint256 nMaxTotalBurnableAmount;
     uint256 nTotalBurned;
     
+    struct ExpDest{
+        uint8 nID;
+        address addr;
+        uint8 nWeight;
+    }
+
+    mapping (string => ExpDest) expDestinations;
+    
     // Events
     event LogApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event LogTransfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
-    event LogTransferTokenIssue(address addrSender, address indexed addrTo, uint256 nTransferredAmount, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
-    event LogTransferFrom(address indexed addrFrom, address indexed addrTo, address indexed sMsgSender);
+    event LogTransferTokenRelease(address addrSender, address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
     event LogBurn(address indexed addrBurnFrom, uint256 nAmount);
     
     modifier OnlyInstantiator () {
@@ -57,6 +64,12 @@ contract SYGONtoken {
         balances[addrInstantiator] = nInitialTotalSupply;
         sName = "SYGON";
         sSymbol = "SYGON";
+        
+        // Implicit Expenditure Destinations
+        expDestinations["PRO"]=ExpDest(1,address(0x68559ead059468fdc19207e44c88836c2063ae0b),15);
+        expDestinations["OPR"]=ExpDest(2,address(0xe9d1dad223552122bbaf68adade73285aab3bc37),25);
+        expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future implementations
+        expDestinations["ED4"]=ExpDest(4,address(0),0);
     }
     
     function getInstantiator() public view returns(address addrInstantiatorAddress){
@@ -86,10 +99,7 @@ contract SYGONtoken {
         
         require(balances[msg.sender] >= nAmount);
         
-        balances[msg.sender] -= nAmount;
-        balances[addrTo] += nAmount;
-            
-        emit LogTransfer(msg.sender, addrTo, nAmount);
+        executeTransfer(msg.sender,addrTo,nAmount);
         
         bRetSuccess = true;
         
@@ -104,33 +114,70 @@ contract SYGONtoken {
         require(balances[addrFrom] >= nAmount);
         require(allowances[addrFrom][msg.sender] >= nAmount);
         
-        balances[addrFrom] -= nAmount;
-        balances[addrTo] += nAmount;
+
+        executeTransfer(addrFrom,addrTo,nAmount);
         
         allowances[addrFrom][msg.sender] -= nAmount;
-        
-        emit LogTransferFrom(addrFrom, addrTo, msg.sender);
         
         bRetSuccess = true;
         
         return bRetSuccess;
     }
     
-    function transferAsTokenReleaseFromTotalSupply (address addrTo, uint256 nAmount, uint32 nProjectID, uint32 nExpDestination, uint8 nInstallmentNumber) 
-        OnlyInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount) public returns (bool bTransferTokenReleaseSuccess) {
+    function transferAsTokenReleaseFromTotalSupply (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentNumber) 
+        OnlyInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
         
         bool bRetSuccess = false;
         
-        require(balances[msg.sender] >= nAmount);
+        // Calculate amounts for implicit transfers
         
-        balances[msg.sender] -= nAmount;
-        balances[addrTo] += nAmount;
-            
-        emit LogTransferTokenIssue(msg.sender, addrTo, nAmount, nProjectID, nExpDestination, nInstallmentNumber);
+        uint256 nTotalAmount = nAmount_DEV;
+        uint256 nAmount_PRO = (nAmount_DEV*expDestinations["PRO"].nWeight)/10;
+        nTotalAmount += nAmount_PRO;
+        uint256 nAmount_OPR = (nAmount_DEV*expDestinations["OPR"].nWeight)/10;
+        nTotalAmount += nAmount_OPR;
+        uint256 nAmount_ED3 = (nAmount_DEV*expDestinations["ED3"].nWeight)/10;
+        nTotalAmount += nAmount_ED3;
+        uint256 nAmount_ED4 = (nAmount_DEV*expDestinations["PR4"].nWeight)/10;
+        nTotalAmount += nAmount_ED4;
+        
+        // Check availability from TRSR
+        
+        require(balances[msg.sender] >= nTotalAmount);
+        
+        // Transfer
+        
+        // To Explicit Destination: DEV
+        executeTransfer(msg.sender, addrTo, nAmount_DEV);
+        emit LogTransferTokenRelease(msg.sender, addrTo, nProjectID, 0, nInstallmentNumber);
+        
+        // To Implicit Destinations
+        executeTransfer(msg.sender, expDestinations["PRO"].addr, nAmount_PRO);
+        emit LogTransferTokenRelease(msg.sender, expDestinations["PRO"].addr, nProjectID, expDestinations["PRO"].nID, nInstallmentNumber);
+        
+        executeTransfer(msg.sender, expDestinations["OPR"].addr, nAmount_OPR);
+        emit LogTransferTokenRelease(msg.sender, expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentNumber);
+        
+        if(nAmount_ED3 > 0){
+            executeTransfer(msg.sender, expDestinations["ED3"].addr, nAmount_ED3);
+            emit LogTransferTokenRelease(msg.sender, expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentNumber);
+        }
+        
+        if(nAmount_ED4 > 0){
+            executeTransfer(msg.sender, expDestinations["ED4"].addr, nAmount_ED4);
+            emit LogTransferTokenRelease(msg.sender, expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentNumber);
+        }
         
         bRetSuccess = true;
         
         return bRetSuccess;
+    }
+    
+    function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private {
+        balances[addrFrom] -= nAmount;
+        balances[addrTo] += nAmount;
+        
+        emit LogTransfer(addrFrom, addrTo, nAmount);
     }
     
     function getAllowanceForDelegateSpender(address addrOwner, address addrDelegateSpender) public view returns (uint256 nAmount) {
@@ -164,16 +211,20 @@ contract SYGONtoken {
         return nInitialTotalSupply;
     }
     
-    function getSupplyInCirculation() public view returns (uint256 nTotalSYGONTokenInCirculation) {
+    function getSupplyInCirculation() public view returns (uint256 nTotalInCirculation) {
         return (nInitialTotalSupply - balances[addrInstantiator]) - nTotalBurned;
     }
     
-    function getRemainingIssuableSupply() public view returns (uint256 nTotalSYGONTokenRemainingIssuable) {
+    function getRemainingReleasableSupply() public view returns (uint256 nTotalRemainingReleasable) {
         return balances[addrInstantiator];
     }
     
-    function getTotalBurned() public view returns (uint256 nTotalSYGONTokenBurnedQuantity) {
+    function getTotalBurned() public view returns (uint256 nTotalBurnedQuantity) {
         return nTotalBurned;
+    }
+    
+    function calctest() public view returns(uint256 result){
+        return ((10000*(uint256(10)**nTokenDecimals)*15)/10) / (uint256(10)**nTokenDecimals);
     }
 }
 
