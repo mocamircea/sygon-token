@@ -25,10 +25,10 @@ contract SYGONtoken {
     mapping (string => ExpDest) expDestinations;
     
     // Events
-    event LogApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
-    event LogTransfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
-    event LogTransferTokenRelease(address addrSender, address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
-    event LogBurn(address indexed addrBurnFrom, uint256 nAmount);
+    event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
+    event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
+    event TransferTokenRelease(address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
+    event Burn(address indexed addrBurnFrom, uint256 nAmount);
     
     modifier OnlyInstantiator () {
         require (msg.sender == addrInstantiator);
@@ -87,7 +87,7 @@ contract SYGONtoken {
         
         allowances[msg.sender][addrDelegateSpender] = nAmount;
         
-        emit LogApproveDelegateSpender(msg.sender, addrDelegateSpender, nAmount);
+        emit ApproveDelegateSpender(msg.sender, addrDelegateSpender, nAmount);
         
         return true;
     }
@@ -149,23 +149,23 @@ contract SYGONtoken {
         
         // To Explicit Destination: DEV
         executeTransfer(msg.sender, addrTo, nAmount_DEV);
-        emit LogTransferTokenRelease(msg.sender, addrTo, nProjectID, 0, nInstallmentNumber);
+        emit TransferTokenRelease(addrTo, nProjectID, 0, nInstallmentNumber);
         
         // To Implicit Destinations
         executeTransfer(msg.sender, expDestinations["PRO"].addr, nAmount_PRO);
-        emit LogTransferTokenRelease(msg.sender, expDestinations["PRO"].addr, nProjectID, expDestinations["PRO"].nID, nInstallmentNumber);
+        emit TransferTokenRelease(expDestinations["PRO"].addr, nProjectID, expDestinations["PRO"].nID, nInstallmentNumber);
         
         executeTransfer(msg.sender, expDestinations["OPR"].addr, nAmount_OPR);
-        emit LogTransferTokenRelease(msg.sender, expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentNumber);
+        emit TransferTokenRelease(expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentNumber);
         
         if(nAmount_ED3 > 0){
             executeTransfer(msg.sender, expDestinations["ED3"].addr, nAmount_ED3);
-            emit LogTransferTokenRelease(msg.sender, expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentNumber);
+            emit TransferTokenRelease(expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentNumber);
         }
         
         if(nAmount_ED4 > 0){
             executeTransfer(msg.sender, expDestinations["ED4"].addr, nAmount_ED4);
-            emit LogTransferTokenRelease(msg.sender, expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentNumber);
+            emit TransferTokenRelease(expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentNumber);
         }
         
         bRetSuccess = true;
@@ -177,7 +177,7 @@ contract SYGONtoken {
         balances[addrFrom] -= nAmount;
         balances[addrTo] += nAmount;
         
-        emit LogTransfer(addrFrom, addrTo, nAmount);
+        emit Transfer(addrFrom, addrTo, nAmount);
     }
     
     function getAllowanceForDelegateSpender(address addrOwner, address addrDelegateSpender) public view returns (uint256 nAmount) {
@@ -199,7 +199,7 @@ contract SYGONtoken {
         balances[msg.sender] -= nAmountToBurn;
         nTotalBurned += nAmountToBurn;
         
-        emit LogBurn(msg.sender, nAmountToBurn);
+        emit Burn(msg.sender, nAmountToBurn);
         
         return true;
     }
