@@ -9,12 +9,16 @@ contract SYGONtoken {
     
     mapping (address => uint256) balances;
     
-    mapping (address => mapping(address => uint256)) allowances;  // Delegate spenders
+    // Delegate spenders
+    mapping (address => mapping(address => uint256)) allowances;
     
     // Initial supply and quantities
+    
     uint256 nInitialTotalSupply;
     uint256 nMaxTotalBurnableAmount;
     uint256 nTotalBurned;
+    
+    // Expenditure Destinations
     
     struct ExpDest{
         uint8 nID;
@@ -22,13 +26,15 @@ contract SYGONtoken {
         uint8 nWeight;
     }
 
-    mapping (string => ExpDest) expDestinations;
+    mapping (string => ExpDest) expDestinations; // Implicit Destinations
     
     // Events
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
     event TransferTokenRelease(address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
     event Burn(address indexed addrBurnFrom, uint256 nAmount);
+    event ChangeEDAddress(string indexed sEDName, address indexed addrNewAddress);
+    event ChangeEDWeight(string indexed sEDName, uint8 nNewWeight);
     
     modifier OnlyInstantiator () {
         require (msg.sender == addrInstantiator);
@@ -66,8 +72,8 @@ contract SYGONtoken {
         sSymbol = "SYGON";
         
         // Implicit Expenditure Destinations
-        expDestinations["PRO"]=ExpDest(1,address(0x68559ead059468fdc19207e44c88836c2063ae0b),15);
-        expDestinations["OPR"]=ExpDest(2,address(0xe9d1dad223552122bbaf68adade73285aab3bc37),25);
+        expDestinations["PRO"]=ExpDest(1,address(0x68559ead059468fdc19207e44c88836c2063ae0b),150);
+        expDestinations["OPR"]=ExpDest(2,address(0xe9d1dad223552122bbaf68adade73285aab3bc37),250);
         expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future implementations
         expDestinations["ED4"]=ExpDest(4,address(0),0);
     }
@@ -132,13 +138,13 @@ contract SYGONtoken {
         // Calculate amounts for implicit transfers
         
         uint256 nTotalAmount = nAmount_DEV;
-        uint256 nAmount_PRO = (nAmount_DEV*expDestinations["PRO"].nWeight)/10;
+        uint256 nAmount_PRO = (nAmount_DEV*expDestinations["PRO"].nWeight)/100;
         nTotalAmount += nAmount_PRO;
-        uint256 nAmount_OPR = (nAmount_DEV*expDestinations["OPR"].nWeight)/10;
+        uint256 nAmount_OPR = (nAmount_DEV*expDestinations["OPR"].nWeight)/100;
         nTotalAmount += nAmount_OPR;
-        uint256 nAmount_ED3 = (nAmount_DEV*expDestinations["ED3"].nWeight)/10;
+        uint256 nAmount_ED3 = (nAmount_DEV*expDestinations["ED3"].nWeight)/100;
         nTotalAmount += nAmount_ED3;
-        uint256 nAmount_ED4 = (nAmount_DEV*expDestinations["PR4"].nWeight)/10;
+        uint256 nAmount_ED4 = (nAmount_DEV*expDestinations["PR4"].nWeight)/100;
         nTotalAmount += nAmount_ED4;
         
         // Check availability from TRSR
@@ -225,6 +231,54 @@ contract SYGONtoken {
     
     function calctest() public view returns(uint256 result){
         return ((10000*(uint256(10)**nTokenDecimals)*15)/10) / (uint256(10)**nTokenDecimals);
+    }
+    
+    // Expenditure Destinations info
+    
+    function getAddressForExpDest(string sEDName) public view returns (address addrExpDestAddress) {
+        return expDestinations[sEDName].addr;
+    }
+    
+    function getIDForExpDest(string sEDName) public view returns (uint8 nExpDestID) {
+        return expDestinations[sEDName].nID;
+    }
+    
+    function getWeightForExpDest(string sEDName) public view returns (uint nExpDestWeight) {
+        return expDestinations[sEDName].nWeight;
+    }
+    
+    // Modify Expenditure Destinations
+    
+    function setAddressForExpDest(string sEDName, address addrNew) public
+        OnlyInstantiator NotToInstantiator(addrNew) returns (bool bChangeEDAddressSuccess) {
+            
+        bool bRetSuccess = false;
+        
+        require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
+        
+        expDestinations[sEDName].addr = addrNew;
+        
+        bRetSuccess = true;
+        
+        emit ChangeEDAddress(sEDName, addrNew);
+        
+        return bRetSuccess;
+    }
+    
+    function setWeightForExpDest(string sEDName, uint8 nNewWeight) public
+        OnlyInstantiator returns (bool bChangeEDWeightSuccess) {
+            
+        bool bRetSuccess = false;
+        
+        require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
+        
+        expDestinations[sEDName].nID = nNewWeight;
+        
+        bRetSuccess = true;
+        
+        emit ChangeEDWeight(sEDName, nNewWeight);
+        
+        return bRetSuccess;
     }
 }
 
