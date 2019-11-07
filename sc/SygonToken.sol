@@ -38,8 +38,8 @@ contract SYGONtoken {
         uint256 threshold;
         uint256 factor;
     }
-    mapping (uint8 => feeThreshold) feeThresholds;
-    
+    mapping (uint8 => feeThreshold) feeSettings;
+    address public addrFeeChanger;
     
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
@@ -122,6 +122,8 @@ contract SYGONtoken {
         // Fee
         bFeeIsActive = false;
         addrFees = address(0);
+        addrFeeChanger = addrCreator;
+        //feeSettings[0] = 
     }
 
     
@@ -325,5 +327,22 @@ contract SYGONtoken {
         emit ChangeEDWeight(sEDName, nNewWeight);
         
         return bRetSuccess;
+    }
+    
+    // Fee mechanism
+    
+    function changeFeeChanger(address addrNewChanger) public returns (bool bChangeFeeChangerSuccess){
+        bChangeFeeChangerSuccess = false;
+        require(msg.sender == addrFeeChanger);
+        addrFeeChanger = addrNewChanger;
+        bChangeFeeChangerSuccess = true;
+    }
+    
+    function changeFee(uint8 nFeeID, uint256 nNewFeeThreshold, uint8 nNewFeeFactor) returns (bool bChangeFeeSuccess) {
+        require(msg.sender == addrFeeChanger);
+        require(nNewFeeThreshold > 0 && nNewFeeThreshold < getCirculatingSupply());
+        feeSettings[nFeeID].threshold = nNewFeeThreshold;
+        feeSettings[nFeeID].factor = nNewFeeFactor;
+        bChangeFeeSuccess = true;
     }
 }
