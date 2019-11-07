@@ -1,9 +1,9 @@
 pragma solidity 0.4.26;
 
 contract SYGONtoken {
-    address addrCreator;
+    address public addrCreator;
     
-    uint8 nDecimals;
+    uint8 public nDecimals;
     string public sName;
     string public sSymbol;
     
@@ -28,7 +28,6 @@ contract SYGONtoken {
 
     mapping (string => ExpDest) expDestinations;
     
-    // Events
     
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
@@ -36,6 +35,7 @@ contract SYGONtoken {
     event Burn(address indexed addrBurnFrom, uint256 nAmount);
     event ChangeEDAddress(string indexed sEDName, address indexed addrNewAddress);
     event ChangeEDWeight(string indexed sEDName, uint8 nNewWeight);
+    
     
     modifier OnlyCreator () {
         require (msg.sender == addrCreator);
@@ -99,22 +99,21 @@ contract SYGONtoken {
         expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future use
         expDestinations["ED4"]=ExpDest(4,address(0),0); // Reserved for future use
     }
-    
-    function getCreator() public view returns(address addrCreatorAddress){
-        return addrCreator;
-    }
+
     
     function balanceOf(address addrTokenOwner) public view returns(uint256 nOwnerBalance) {
         return balances[addrTokenOwner];
+    }
+    
+    function getAllowanceForDelegateSpender(address addrOwner, address addrDelegateSpender) public view returns (uint256 nAmount) {
+        return allowances[addrOwner][addrDelegateSpender];
     }
     
     function approve(address addrDelegateSpender, uint256 nAmount) public 
         ForbidCreator NotToCreator (addrDelegateSpender) returns(bool bApproveSuccess) {
         
         require(msg.sender != addrDelegateSpender);
-        
         allowances[msg.sender][addrDelegateSpender] = nAmount;
-        
         emit ApproveDelegateSpender(msg.sender, addrDelegateSpender, nAmount);
         
         return true;
@@ -124,7 +123,7 @@ contract SYGONtoken {
         ForbidCreator NotToCreator (addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns(bool bTransferSuccess) {
             
         bool bRetSuccess = false;
-        
+
         require(balances[msg.sender] >= nAmount);
         executeTransfer(msg.sender,addrTo,nAmount);
         bRetSuccess = true;
@@ -181,12 +180,12 @@ contract SYGONtoken {
         executeTransfer(msg.sender, expDestinations["OPR"].addr, nAmount_OPR);
         emit TransferTokenRelease(expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentID);
         
-        if(nAmount_ED3 > 0){
+        if (nAmount_ED3 > 0) {
             executeTransfer(msg.sender, expDestinations["ED3"].addr, nAmount_ED3);
             emit TransferTokenRelease(expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentID);
         }
         
-        if(nAmount_ED4 > 0){
+        if (nAmount_ED4 > 0) {
             executeTransfer(msg.sender, expDestinations["ED4"].addr, nAmount_ED4);
             emit TransferTokenRelease(expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentID);
         }
@@ -202,14 +201,7 @@ contract SYGONtoken {
         
         emit Transfer(addrFrom, addrTo, nAmount);
     }
-    
-    function getAllowanceForDelegateSpender(address addrOwner, address addrDelegateSpender) public view returns (uint256 nAmount) {
-        return allowances[addrOwner][addrDelegateSpender];
-    }
-    
-    function getDecimals() public view returns (uint8 nTokenDecimals) {
-        return nDecimals;
-    }
+
     
     // Token burn
     
@@ -230,7 +222,7 @@ contract SYGONtoken {
     
     // Supplies and Quantities
     
-    function totalInitialSupply() public view returns(uint256 nTotalSupply){
+    function totalInitialSupply() public view returns(uint256 nTotalSupply) {
         return nInitialTotalSupply;
     }
     
@@ -246,7 +238,7 @@ contract SYGONtoken {
         return nTotalBurned;
     }
     
-    // Access Expenditure Destinations info
+    // Access Expenditure Destinations fields
    
     function getAddressForExpDest(string sEDName) public view returns (address addrExpDestAddress) {
         return expDestinations[sEDName].addr;
