@@ -58,7 +58,19 @@ contract SYGONtoken {
     }
     
     modifier StrictPositive (uint256 nAmount) {
-        require(nAmount > 0);
+        require (nAmount > 0);
+        _;
+    }
+    
+    modifier IfValidReleaseAddress(address addrRelease) {
+        require (addrRelease != addrCreator);
+        
+        require (addrRelease != expDestinations["PRO"].addr);
+        require (addrRelease != expDestinations["OPR"].addr);
+        require (addrRelease != expDestinations["ED3"].addr);
+        require (addrRelease != expDestinations["ED4"].addr);
+        
+        require (addrRelease != address(0));
         _;
     }
     
@@ -66,7 +78,7 @@ contract SYGONtoken {
         addrCreator = msg.sender;
         nTokenDecimals = 18;
         nInitialTotalSupply = 7500000000 * (uint256(10) ** nTokenDecimals);
-        nMaxTotalBurnableAmount = 6000000000 * (uint256(10) ** nTokenDecimals);  // Maximum 80% of the total initial supply
+        nMaxTotalBurnableAmount = 6750000000 * (uint256(10) ** nTokenDecimals);  // Maximum 90% of the total initial supply
         nTotalBurned = 0;
         balances[addrCreator] = nInitialTotalSupply;
         sName = "SYGON";
@@ -131,7 +143,7 @@ contract SYGONtoken {
     }
     
     function transferAsTokenReleaseFromTotalSupply (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentNumber) 
-        OnlyCreator NotToInstantiator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
+        OnlyCreator IfValidReleaseAddress(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
         
         bool bRetSuccess = false;
         
