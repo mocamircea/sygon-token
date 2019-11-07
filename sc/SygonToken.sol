@@ -1,7 +1,7 @@
-pragma solidity 0.4.25;
+pragma solidity 0.4.26;
 
 contract SYGONtoken {
-    address addrInstantiator;
+    address addrCreator;
     
     uint8 nTokenDecimals;
     string public sName;
@@ -26,9 +26,10 @@ contract SYGONtoken {
         uint8 nWeight;
     }
 
-    mapping (string => ExpDest) expDestinations; // Implicit Destinations
+    mapping (string => ExpDest) expDestinations;
     
     // Events
+    
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
     event TransferTokenRelease(address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
@@ -36,13 +37,13 @@ contract SYGONtoken {
     event ChangeEDAddress(string indexed sEDName, address indexed addrNewAddress);
     event ChangeEDWeight(string indexed sEDName, uint8 nNewWeight);
     
-    modifier OnlyInstantiator () {
-        require (msg.sender == addrInstantiator);
+    modifier OnlyCreator () {
+        require (msg.sender == addrCreator);
         _;
     }
     
     modifier ForbidInstantiator () {
-        require (msg.sender != addrInstantiator);
+        require (msg.sender != addrCreator);
         _;
     }
     
@@ -52,34 +53,38 @@ contract SYGONtoken {
     }
     
     modifier NotToInstantiator (address addr) {
-        require (addr != addrInstantiator);
+        require (addr != addrCreator);
         _;
     }
     
-    modifier Positive (uint256 nAmount) {
+    modifier StrictPositive (uint256 nAmount) {
         require(nAmount > 0);
         _;
     }
     
     constructor() public {
-        addrInstantiator = msg.sender;
+        addrCreator = msg.sender;
         nTokenDecimals = 18;
         nInitialTotalSupply = 7500000000 * (uint256(10) ** nTokenDecimals);
         nMaxTotalBurnableAmount = 6000000000 * (uint256(10) ** nTokenDecimals);  // Maximum 80% of the total initial supply
         nTotalBurned = 0;
-        balances[addrInstantiator] = nInitialTotalSupply;
+        balances[addrCreator] = nInitialTotalSupply;
         sName = "SYGON";
         sSymbol = "SYGON";
         
-        // Implicit Expenditure Destinations
-        expDestinations["PRO"]=ExpDest(1,address(0x68559ead059468fdc19207e44c88836c2063ae0b),150);
-        expDestinations["OPR"]=ExpDest(2,address(0xe9d1dad223552122bbaf68adade73285aab3bc37),250);
+        // Expenditure Destinations
+        
+        // Explicit
+        expDestinations["DEV"]=ExpDest(0,address(0),100);
+        // Implicit
+        expDestinations["PRO"]=ExpDest(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
+        expDestinations["OPR"]=ExpDest(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
         expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future implementations
         expDestinations["ED4"]=ExpDest(4,address(0),0);
     }
     
     function getInstantiator() public view returns(address addrInstantiatorAddress){
-        return addrInstantiator;
+        return addrCreator;
     }
     
     function balanceOf(address addrTokenOwner) public view returns(uint256 nOwnerBalance) {
@@ -99,39 +104,34 @@ contract SYGONtoken {
     }
     
     function transfer(address addrTo, uint256 nAmount) public 
-        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount) returns(bool bTransferSuccess) {
+        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns(bool bTransferSuccess) {
             
         bool bRetSuccess = false;
         
         require(balances[msg.sender] >= nAmount);
-        
         executeTransfer(msg.sender,addrTo,nAmount);
-        
         bRetSuccess = true;
         
         return bRetSuccess;
     }
     
     function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public 
-        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount) returns (bool bTransferFromSuccess) {
+        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns (bool bTransferFromSuccess) {
             
         bool bRetSuccess = false;
         
         require(balances[addrFrom] >= nAmount);
         require(allowances[addrFrom][msg.sender] >= nAmount);
         
-
         executeTransfer(addrFrom,addrTo,nAmount);
-        
         allowances[addrFrom][msg.sender] -= nAmount;
-        
         bRetSuccess = true;
         
         return bRetSuccess;
     }
     
     function transferAsTokenReleaseFromTotalSupply (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentNumber) 
-        OnlyInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) Positive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
+        OnlyCreator NotToInstantiator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
         
         bool bRetSuccess = false;
         
@@ -194,7 +194,7 @@ contract SYGONtoken {
         return nTokenDecimals;
     }
     
-    // SYGON token burn
+    // Token burn
     
     function burn(uint256 nAmountToBurn) public 
         ForbidInstantiator returns (bool bBurnSuccess) {
@@ -218,23 +218,19 @@ contract SYGONtoken {
     }
     
     function getSupplyInCirculation() public view returns (uint256 nTotalInCirculation) {
-        return (nInitialTotalSupply - balances[addrInstantiator]) - nTotalBurned;
+        return (nInitialTotalSupply - balances[addrCreator]) - nTotalBurned;
     }
     
     function getRemainingReleasableSupply() public view returns (uint256 nTotalRemainingReleasable) {
-        return balances[addrInstantiator];
+        return balances[addrCreator];
     }
     
     function getTotalBurned() public view returns (uint256 nTotalBurnedQuantity) {
         return nTotalBurned;
     }
     
-    function calctest() public view returns(uint256 result){
-        return ((10000*(uint256(10)**nTokenDecimals)*15)/10) / (uint256(10)**nTokenDecimals);
-    }
-    
-    // Expenditure Destinations info
-    
+    // Access Expenditure Destinations info
+   
     function getAddressForExpDest(string sEDName) public view returns (address addrExpDestAddress) {
         return expDestinations[sEDName].addr;
     }
@@ -250,7 +246,7 @@ contract SYGONtoken {
     // Modify Expenditure Destinations
     
     function setAddressForExpDest(string sEDName, address addrNew) public
-        OnlyInstantiator NotToInstantiator(addrNew) returns (bool bChangeEDAddressSuccess) {
+        OnlyCreator NotToInstantiator(addrNew) returns (bool bChangeEDAddressSuccess) {
             
         bool bRetSuccess = false;
         
@@ -266,7 +262,7 @@ contract SYGONtoken {
     }
     
     function setWeightForExpDest(string sEDName, uint8 nNewWeight) public
-        OnlyInstantiator returns (bool bChangeEDWeightSuccess) {
+        OnlyCreator StrictPositive(nNewWeight) returns (bool bChangeEDWeightSuccess) {
             
         bool bRetSuccess = false;
         
@@ -281,4 +277,3 @@ contract SYGONtoken {
         return bRetSuccess;
     }
 }
-
