@@ -23,7 +23,7 @@
   <b><i>transfer</i></b> and <b><i>transferFrom</i></b><br/>
   As of ERC20, methods are used by any human or machine users that hold SYGON tokens.
 <br/><br/>
-  <b><i>transferAsTokenReleaseFromTotalSupply</i></b> <br/>
+  <b><i>transferAsTokenRelease</i></b> <br/>
 The SYGON token is put into circulation with this method, by the Instantiator. This special method of transfer is meant to  release amounts of SYGON tokens directly to contributors. So the token release is fully covered in contribution, every time. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, contributors that receive SYGON tokens can further put them on the market. So any interested party can purchase it from the market and further get access to the SYGON technology products.<br/><br/>
   
 Method INPUT<br/>
