@@ -28,6 +28,18 @@ contract SYGONtoken {
 
     mapping (string => ExpDest) expDestinations;
     
+    // Burn mechanism
+    bool public bBurnIsActive;
+    
+    // Fee
+    bool public bFeeIsActive;
+    address public addrFees;
+    struct feeThreshold {
+        uint256 threshold;
+        uint256 factor;
+    }
+    mapping (uint8 => feeThreshold) feeThresholds;
+    
     
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
@@ -62,7 +74,7 @@ contract SYGONtoken {
         _;
     }
     
-    modifier IfValidReleaseAddress(address addrRelease) {
+    modifier ValidReleaseAddress(address addrRelease) {
         require (addrRelease != addrCreator);
         
         require (addrRelease != expDestinations["PRO"].addr);
@@ -76,6 +88,11 @@ contract SYGONtoken {
     
     modifier OnlyImplicitDestination(string sEDName) {
         require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
+        _;
+    }
+    
+    modifier BurnIsActive() {
+        require(bBurnIsActive);
         _;
     }
     
@@ -98,6 +115,13 @@ contract SYGONtoken {
         expDestinations["OPR"]=ExpDest(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
         expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future use
         expDestinations["ED4"]=ExpDest(4,address(0),0); // Reserved for future use
+        
+        // Burn
+        bBurnIsActive = true; // For convenience
+        
+        // Fee
+        bFeeIsActive = false;
+        addrFees = address(0);
     }
 
     
@@ -147,7 +171,7 @@ contract SYGONtoken {
     }
     
     function transferAsTokenRelease (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentID) 
-        OnlyCreator IfValidReleaseAddress(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
+        OnlyCreator ValidReleaseAddress(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
         
         bool bRetSuccess = false;
         
@@ -206,17 +230,39 @@ contract SYGONtoken {
     // Token burn
     
     function burn(uint256 nAmountToBurn) public 
-        ForbidCreator returns (bool bBurnSuccess) {
+        ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
+        
+        bBurnSuccess = false;
         
         require (balances[msg.sender] >= nAmountToBurn);
-        require (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable);
         
-        balances[msg.sender] -= nAmountToBurn;
-        nTotalBurned += nAmountToBurn;
+        if (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable) {
+            balances[msg.sender] -= nAmountToBurn;
+            nTotalBurned += nAmountToBurn;
         
-        emit Burn(msg.sender, nAmountToBurn);
+            emit Burn(msg.sender, nAmountToBurn);
+            bBurnSuccess = true;
+        }else {
+            if(nTotalBurned == nMaxTotalBurnable) {
+                bBurnIsActive = false;
+            }
+        }
         
-        return true;
+        return bBurnSuccess;
+    }
+    
+    // Fee
+    
+    function calculateFee(uint256 nAmount) internal
+        returns(uint256 nFee) {
+            
+        if (bFeeIsActive){
+            
+        }else {
+            nFee = 0;
+        }
+        
+        return nFee;
     }
     
     
@@ -226,7 +272,7 @@ contract SYGONtoken {
         return nInitialTotalSupply;
     }
     
-    function getSupplyInCirculation() public view returns (uint256 nTotalInCirculation) {
+    function getCirculatingSupply() public view returns (uint256 nTotalInCirculation) {
         return (nInitialTotalSupply - balances[addrCreator]) - nTotalBurned;
     }
     
