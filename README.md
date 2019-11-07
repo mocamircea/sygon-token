@@ -9,7 +9,7 @@
 <b>Total Released Quantity (TRQ):</b> total amount ever released from TIS.<br/>
 <b>Total Maximum Burnable Quantity (TMBQ):</b> fixed, 6000000000 (representing 80% of the total initial supply). <br/>
 <b>Total Burned Quantity (TBQ):</b> total amount of tokens burned so far. Burn applies to TRQ only.<br/>
-<b>Total Supply in Circulation (TSC):</b> total token supply that was released and was not burned yet. TSC=TRQ-TBQ <br/>
+<b>Total Circulating Supply (TCS):</b> total token supply that was released and was not burned yet. TCS=TRQ-TBQ <br/>
   <b>Total Remaining Supply to be Released (TRSR):</b> total remaining token supply that can still be distributed from initial supply. TRSR=TIS-TRQ<br/>
 </p>
 <hr/>
@@ -30,7 +30,7 @@ Method INPUT<br/>
   <br/>
   <ul>
     <li>
-      <b>Benefficiary</b><br/>
+      <b>Beneficiary</b><br/>
       The address of the contributor to receive the Amount.<br/>
     </li>
     <li>
