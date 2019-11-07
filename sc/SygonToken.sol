@@ -3,7 +3,7 @@ pragma solidity 0.4.26;
 contract SYGONtoken {
     address addrCreator;
     
-    uint8 nTokenDecimals;
+    uint8 nDecimals;
     string public sName;
     string public sSymbol;
     
@@ -12,10 +12,10 @@ contract SYGONtoken {
     // Delegate spenders
     mapping (address => mapping(address => uint256)) allowances;
     
-    // Initial supply and quantities
+    // Supply and quantities
     
     uint256 nInitialTotalSupply;
-    uint256 nMaxTotalBurnableAmount;
+    uint256 nMaxTotalBurnable;
     uint256 nTotalBurned;
     
     // Expenditure Destinations
@@ -42,7 +42,7 @@ contract SYGONtoken {
         _;
     }
     
-    modifier ForbidInstantiator () {
+    modifier ForbidCreator () {
         require (msg.sender != addrCreator);
         _;
     }
@@ -52,7 +52,7 @@ contract SYGONtoken {
         _;
     }
     
-    modifier NotToInstantiator (address addr) {
+    modifier NotToCreator (address addr) {
         require (addr != addrCreator);
         _;
     }
@@ -74,11 +74,16 @@ contract SYGONtoken {
         _;
     }
     
+    modifier OnlyImplicitDestination(string sEDName) {
+        require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
+        _;
+    }
+    
     constructor() public {
         addrCreator = msg.sender;
-        nTokenDecimals = 18;
-        nInitialTotalSupply = 7500000000 * (uint256(10) ** nTokenDecimals);
-        nMaxTotalBurnableAmount = 6750000000 * (uint256(10) ** nTokenDecimals);  // Maximum 90% of the total initial supply
+        nDecimals = 18;
+        nInitialTotalSupply = 7500000000 * (uint256(10) ** nDecimals);
+        nMaxTotalBurnable = 6750000000 * (uint256(10) ** nDecimals);  // Maximum 90% of the total initial supply
         nTotalBurned = 0;
         balances[addrCreator] = nInitialTotalSupply;
         sName = "SYGON";
@@ -87,15 +92,15 @@ contract SYGONtoken {
         // Expenditure Destinations
         
         // Explicit
-        expDestinations["DEV"]=ExpDest(0,address(0),100);
+        expDestinations["DEV"]=ExpDest(0,address(0),100); // Only for coherence with implicit destinations in getters
         // Implicit
         expDestinations["PRO"]=ExpDest(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
         expDestinations["OPR"]=ExpDest(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
-        expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future implementations
-        expDestinations["ED4"]=ExpDest(4,address(0),0);
+        expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future use
+        expDestinations["ED4"]=ExpDest(4,address(0),0); // Reserved for future use
     }
     
-    function getInstantiator() public view returns(address addrInstantiatorAddress){
+    function getCreator() public view returns(address addrCreatorAddress){
         return addrCreator;
     }
     
@@ -104,7 +109,7 @@ contract SYGONtoken {
     }
     
     function approve(address addrDelegateSpender, uint256 nAmount) public 
-        ForbidInstantiator NotToInstantiator(addrDelegateSpender) returns(bool bApproveSuccess) {
+        ForbidCreator NotToCreator (addrDelegateSpender) returns(bool bApproveSuccess) {
         
         require(msg.sender != addrDelegateSpender);
         
@@ -116,7 +121,7 @@ contract SYGONtoken {
     }
     
     function transfer(address addrTo, uint256 nAmount) public 
-        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns(bool bTransferSuccess) {
+        ForbidCreator NotToCreator (addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns(bool bTransferSuccess) {
             
         bool bRetSuccess = false;
         
@@ -128,7 +133,7 @@ contract SYGONtoken {
     }
     
     function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public 
-        ForbidInstantiator NotToInstantiator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns (bool bTransferFromSuccess) {
+        ForbidCreator NotToCreator (addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns (bool bTransferFromSuccess) {
             
         bool bRetSuccess = false;
         
@@ -142,7 +147,7 @@ contract SYGONtoken {
         return bRetSuccess;
     }
     
-    function transferAsTokenReleaseFromTotalSupply (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentNumber) 
+    function transferAsTokenRelease (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentID) 
         OnlyCreator IfValidReleaseAddress(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
         
         bool bRetSuccess = false;
@@ -159,7 +164,7 @@ contract SYGONtoken {
         uint256 nAmount_ED4 = (nAmount_DEV*expDestinations["PR4"].nWeight)/100;
         nTotalAmount += nAmount_ED4;
         
-        // Check availability from TRSR
+        // Check availability from Total Remaining Supply to be Released (TRSR)
         
         require(balances[msg.sender] >= nTotalAmount);
         
@@ -167,23 +172,23 @@ contract SYGONtoken {
         
         // To Explicit Destination: DEV
         executeTransfer(msg.sender, addrTo, nAmount_DEV);
-        emit TransferTokenRelease(addrTo, nProjectID, 0, nInstallmentNumber);
+        emit TransferTokenRelease(addrTo, nProjectID, 0, nInstallmentID);
         
         // To Implicit Destinations
         executeTransfer(msg.sender, expDestinations["PRO"].addr, nAmount_PRO);
-        emit TransferTokenRelease(expDestinations["PRO"].addr, nProjectID, expDestinations["PRO"].nID, nInstallmentNumber);
+        emit TransferTokenRelease(expDestinations["PRO"].addr, nProjectID, expDestinations["PRO"].nID, nInstallmentID);
         
         executeTransfer(msg.sender, expDestinations["OPR"].addr, nAmount_OPR);
-        emit TransferTokenRelease(expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentNumber);
+        emit TransferTokenRelease(expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentID);
         
         if(nAmount_ED3 > 0){
             executeTransfer(msg.sender, expDestinations["ED3"].addr, nAmount_ED3);
-            emit TransferTokenRelease(expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentNumber);
+            emit TransferTokenRelease(expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentID);
         }
         
         if(nAmount_ED4 > 0){
             executeTransfer(msg.sender, expDestinations["ED4"].addr, nAmount_ED4);
-            emit TransferTokenRelease(expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentNumber);
+            emit TransferTokenRelease(expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentID);
         }
         
         bRetSuccess = true;
@@ -202,17 +207,17 @@ contract SYGONtoken {
         return allowances[addrOwner][addrDelegateSpender];
     }
     
-    function getTokenDecimals() public view returns (uint8 nDecimals) {
-        return nTokenDecimals;
+    function getDecimals() public view returns (uint8 nTokenDecimals) {
+        return nDecimals;
     }
     
     // Token burn
     
     function burn(uint256 nAmountToBurn) public 
-        ForbidInstantiator returns (bool bBurnSuccess) {
+        ForbidCreator returns (bool bBurnSuccess) {
         
         require (balances[msg.sender] >= nAmountToBurn);
-        require (nAmountToBurn + nTotalBurned <= nMaxTotalBurnableAmount);
+        require (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable);
         
         balances[msg.sender] -= nAmountToBurn;
         nTotalBurned += nAmountToBurn;
@@ -256,16 +261,14 @@ contract SYGONtoken {
     }
     
     // Modify Expenditure Destinations
+    // Only Implicit Destinations can have Address or Weight modified
     
     function setAddressForExpDest(string sEDName, address addrNew) public
-        OnlyCreator NotToInstantiator(addrNew) returns (bool bChangeEDAddressSuccess) {
+        OnlyCreator NotToCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
             
         bool bRetSuccess = false;
         
-        require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
-        
         expDestinations[sEDName].addr = addrNew;
-        
         bRetSuccess = true;
         
         emit ChangeEDAddress(sEDName, addrNew);
@@ -274,14 +277,11 @@ contract SYGONtoken {
     }
     
     function setWeightForExpDest(string sEDName, uint8 nNewWeight) public
-        OnlyCreator StrictPositive(nNewWeight) returns (bool bChangeEDWeightSuccess) {
+        OnlyCreator StrictPositive(nNewWeight) OnlyImplicitDestination(sEDName) returns (bool bChangeEDWeightSuccess) {
             
         bool bRetSuccess = false;
         
-        require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
-        
         expDestinations[sEDName].nID = nNewWeight;
-        
         bRetSuccess = true;
         
         emit ChangeEDWeight(sEDName, nNewWeight);
