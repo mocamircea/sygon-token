@@ -42,8 +42,8 @@ Method INPUT<br/>
       The identifier of the project being developed within the SYGON technology/ product.<br/>
     </li>
     <li>
-      <b>Installment Number</b><br/>
-      The installment number of the current transfer for a particular Project ID. This is to provide transparency, by tracking transfers according to several milestones, along a roadmap of a project. For example, if the project targets the development of a software component, this approach matches with software development lifecycle, meaning that contribution is rewarded gradually for consecutive releases of a software component.<br/>
+      <b>Installment ID</b><br/>
+      The installment ID of the current transfer for a particular Project ID. This is to provide transparency, by tracking transfers according to several milestones, along a roadmap of a project. For example, if the project targets the development of a software component, this approach matches with software development lifecycle, meaning that contribution is rewarded gradually for consecutive releases of a software component.<br/>
     </li>
   </ul>
   <h4>Expenditure Destinations</h4>
