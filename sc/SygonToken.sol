@@ -41,6 +41,19 @@ contract SYGONtoken {
     mapping (uint8 => feeThreshold) feeSettings;
     address public addrFeeChanger;
     
+    // Splitters
+    struct SplitSchema {
+        uint8 nTotal;
+        mapping (address => uint8) dest;
+        uint40 nExpiry;
+    }
+    mapping (address => SplitSchema) splitters;
+    
+    // Aliases
+    mapping (address => uint40) aliases;
+    
+    address addrAliasTarget;
+    
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
     event TransferTokenRelease(address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
@@ -86,6 +99,15 @@ contract SYGONtoken {
         _;
     }
     
+    modifier NotReleaseAddress(address addrCheck) {
+        require (addrCheck != expDestinations["DEV"].addr);
+        require (addrCheck != expDestinations["PRO"].addr);
+        require (addrCheck != expDestinations["OPR"].addr);
+        require (addrCheck != expDestinations["ED3"].addr);
+        require (addrCheck != expDestinations["ED4"].addr);
+        _;
+    }
+    
     modifier OnlyImplicitDestination(string sEDName) {
         require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
         _;
@@ -93,6 +115,16 @@ contract SYGONtoken {
     
     modifier BurnIsActive() {
         require(bBurnIsActive);
+        _;
+    }
+    
+    modifier NotAlias(address addrCheck) {
+        require(aliases[addrCheck] == 0);
+        _;
+    }
+    
+    modifier NotFromAliasTarget(address addrCheck) {
+        require(addrCheck != addrAliasTarget);
         _;
     }
     
@@ -124,6 +156,8 @@ contract SYGONtoken {
         addrFees = address(0);
         addrFeeChanger = addrCreator;
         //feeSettings[0] = 
+        
+        
     }
 
     
@@ -145,16 +179,22 @@ contract SYGONtoken {
         return true;
     }
     
+    // -----------------
+    // TRANSFERS
+    
     function transfer(address addrTo, uint256 nAmount) public 
-        ForbidCreator NotToCreator (addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns(bool bTransferSuccess) {
-            
-        bool bRetSuccess = false;
+        ForbidCreator NotToCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotFromAliasTarget(msg.sender) returns(bool bTransferSuccess) {
 
         require(balances[msg.sender] >= nAmount);
-        executeTransfer(msg.sender,addrTo,nAmount);
-        bRetSuccess = true;
         
-        return bRetSuccess;
+        // If not alias send to addrTo
+        if(aliases[addrTo] == 0) {
+            executeTransfer(msg.sender, addrTo, nAmount);
+        }else {  // else, to alias target
+            executeTransfer(msg.sender, addrAliasTarget, nAmount);
+        }
+        
+        return true;
     }
     
     function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public 
@@ -221,6 +261,8 @@ contract SYGONtoken {
         return bRetSuccess;
     }
     
+    //function transferFromAliasTarget()
+    
     function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private {
         balances[addrFrom] -= nAmount;
         balances[addrTo] += nAmount;
@@ -229,7 +271,8 @@ contract SYGONtoken {
     }
 
     
-    // Token burn
+    // -----------------
+    // TOKEN BURN
     
     function burn(uint256 nAmountToBurn) public 
         ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
@@ -253,21 +296,9 @@ contract SYGONtoken {
         return bBurnSuccess;
     }
     
-    // Fee
-    
-    function calculateFee(uint256 nAmount) internal
-        returns(uint256 nFee) {
-            
-        if (bFeeIsActive){
-            
-        }else {
-            nFee = 0;
-        }
-        
-        return nFee;
-    }
-    
-    
+    // -----------------
+    // CALCULATIONS
+    // 
     // Supplies and Quantities
     
     function totalInitialSupply() public view returns(uint256 nTotalSupply) {
@@ -286,8 +317,11 @@ contract SYGONtoken {
         return nTotalBurned;
     }
     
-    // Access Expenditure Destinations fields
-   
+    // -----------------
+    // EXPENDITURE DESTINATIONS
+    
+    // Access fields
+
     function getAddressForExpDest(string sEDName) public view returns (address addrExpDestAddress) {
         return expDestinations[sEDName].addr;
     }
@@ -300,8 +334,8 @@ contract SYGONtoken {
         return expDestinations[sEDName].nWeight;
     }
     
-    // Modify Expenditure Destinations
-    // Only Implicit Destinations can have Address or Weight modified
+    // Modify Settings for Expenditure Destinations
+    // Only Implicit Destinations can only have Address and Weight modified
     
     function setAddressForExpDest(string sEDName, address addrNew) public
         OnlyCreator NotToCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
@@ -329,7 +363,20 @@ contract SYGONtoken {
         return bRetSuccess;
     }
     
-    // Fee mechanism
+    // -----------------
+    // FEE MECHANISM
+    
+    function calculateFee(uint256 nAmount) internal view
+        returns(uint256 nFee) {
+            
+        if (bFeeIsActive){
+            
+        }else {
+            nFee = nAmount +0;
+        }
+        
+        return nFee;
+    }
     
     function changeFeeChanger(address addrNewChanger) public returns (bool bChangeFeeChangerSuccess){
         bChangeFeeChangerSuccess = false;
@@ -338,11 +385,42 @@ contract SYGONtoken {
         bChangeFeeChangerSuccess = true;
     }
     
-    function changeFee(uint8 nFeeID, uint256 nNewFeeThreshold, uint8 nNewFeeFactor) returns (bool bChangeFeeSuccess) {
+    function changeFee(uint8 nFeeID, uint256 nNewFeeThreshold, uint8 nNewFeeFactor) public returns (bool bChangeFeeSuccess) {
         require(msg.sender == addrFeeChanger);
         require(nNewFeeThreshold > 0 && nNewFeeThreshold < getCirculatingSupply());
         feeSettings[nFeeID].threshold = nNewFeeThreshold;
         feeSettings[nFeeID].factor = nNewFeeFactor;
         bChangeFeeSuccess = true;
     }
+    
+    // -----------------
+    // ALIASES
+    
+    // New Alias
+    
+    function addAlias() public 
+        ForbidCreator NotAlias(msg.sender) NotReleaseAddress(msg.sender) returns (bool bAddAliasSuccess) {
+        
+        require(msg.sender != addrAliasTarget);
+        aliases[msg.sender]=uint40(block.timestamp);
+        
+        return true;
+    }
+    
+    // Change alias target
+    
+    function changeAliasTarget(address addrNewTarget) public 
+        OnlyCreator NotToCreator(addrNewTarget) NotReleaseAddress(addrNewTarget) returns (bool bChangeAliasTargetSuccess) {
+        
+        addrAliasTarget = addrNewTarget;
+        
+        return true;
+    }
+    
+    // Get alias creation tmstp
+    
+    function getForAlias(address addrSub) public view returns (uint40 tmstp) {
+        return aliases[addrSub];
+    }
+
 }
