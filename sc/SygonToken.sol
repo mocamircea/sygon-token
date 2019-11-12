@@ -28,30 +28,38 @@ contract SYGONtoken {
 
     mapping (string => ExpDest) expDestinations;
     
-    // Burn mechanism -- For convenience
+    // Burn mechanism -- For checking convenience
     bool public bBurnIsActive;
     
     // Fee
     bool public bFeeIsActive;
     address public addrFees;
+    
     struct feeThreshold {
         uint256 threshold;
         uint256 factor;
     }
+    
     mapping (uint8 => feeThreshold) feeSettings;
     address public addrFeeChanger;
     
+    
     // Splitters
+    struct SplitWeight {
+        address dest;
+        uint8 weight;
+    }
+    
     struct SplitSchema {
-        uint8 nTotal;
-        mapping (address => uint8) dest;
+        SplitWeight[] destWeights;
         uint40 nExpiry;
     }
+    
     mapping (address => SplitSchema) splitters;
+    
     
     // Aliases
     mapping (address => uint40) aliases;
-    
     address addrAliasTarget;
     
     
@@ -158,6 +166,8 @@ contract SYGONtoken {
         addrFeeChanger = addrCreator;
         //feeSettings[0] = 
         
+        // Alias target
+        addrAliasTarget = address(0x0014723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
         
     }
 
@@ -190,7 +200,14 @@ contract SYGONtoken {
     
         // If not an alias, send to addrTo
         if(aliases[addrTo] == 0) {
-            executeTransfer(msg.sender, addrTo, nAmount);
+            if(isSplitter(addrTo)) {
+                if(splitWeightsValid(addrTo)){
+                    executeTransfer(msg.sender, addrTo, nAmount);
+                    transferSplit(addrTo, nAmount);
+                }
+            }else{
+                executeTransfer(msg.sender, addrTo, nAmount);
+            }
         }else {  // else, send to alias target
             executeTransfer(msg.sender, addrAliasTarget, nAmount);
         }
@@ -260,6 +277,20 @@ contract SYGONtoken {
         bRetSuccess = true;
         
         return bRetSuccess;
+    }
+    
+    function transferSplit(address addrFrom, uint256 nAmount) internal {
+        
+            uint256 nCalcAmount = (nAmount * splitters[addrFrom].destWeights[0].weight)/100;
+            executeTransfer(addrFrom, splitters[addrFrom].destWeights[0].dest, nCalcAmount);
+            nCalcAmount = nAmount-nCalcAmount;
+            
+            for(uint8 i = 1; i<=6; i++){
+                if(splitters[addrFrom].destWeights[i].weight>0){
+                    executeTransfer(addrFrom, splitters[addrFrom].destWeights[i].dest, (nCalcAmount*splitters[addrFrom].destWeights[i].weight)/100);
+                }
+            }
+        
     }
     
     //function transferFromAliasTarget()
@@ -397,7 +428,7 @@ contract SYGONtoken {
     // -----------------
     // ALIASES
     
-    // New Alias
+    // Add new alias
     
     function addAlias() public 
         ForbidCreator NotAlias(msg.sender) NotReleaseAddress(msg.sender) returns (bool bAddAliasSuccess) {
@@ -424,4 +455,68 @@ contract SYGONtoken {
         return aliases[addr];
     }
 
+    // -----------------
+    // SPLITTERS
+    
+    // Add new splitter
+    
+    function addSplitter(address addrDest1, uint8 w1, address addrDest2) public returns (bool bAddSplitterSuccess) {
+        require(addrDest1 != addrDest2);
+        require(w1>0 && w1<=100);
+        
+        splitters[msg.sender].destWeights.push(SplitWeight(addrDest1,w1));
+        splitters[msg.sender].destWeights.push(SplitWeight(addrDest2,100-w1));
+        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
+        
+        return true;
+    }
+    
+    // Set a splitter
+    
+    function setSplitter(address addrSplitted, uint8 nPos, address addrDest, uint8 nWeight) public returns (bool bSetSplitterSuccess) {
+        if(msg.sender == addrSplitted && nPos >= 0 && nPos <= 6){
+            splitters[addrSplitted].destWeights[nPos] = SplitWeight(addrDest, nWeight);
+            bSetSplitterSuccess = true;
+        }else{
+            if(msg.sender == splitters[addrSplitted].destWeights[6].dest && nPos >= 7 && nPos <= 11){
+                splitters[addrSplitted].destWeights[nPos] = SplitWeight(addrDest, nWeight);
+                bSetSplitterSuccess = true;
+            }
+        }
+        
+        return bSetSplitterSuccess;
+    }
+    
+    // Change own address in existent splitter
+    
+    function changeDestinationInSplitter(address addrSplitted, address addrNew) public returns (bool bChangeDestInSplitterSuccess) {
+        for (uint i = 0; i<=11; i++){
+            if(splitters[addrSplitted].destWeights[i].dest == msg.sender) {
+                splitters[addrSplitted].destWeights[i].dest = addrNew;
+                bChangeDestInSplitterSuccess = true;
+            }
+        }
+    }
+    
+    // Check if split weights are valid
+    
+    function splitWeightsValid(address addrSplitted) public view returns (bool bSplitWeightsAreValid) {
+        if(splitters[addrSplitted].destWeights[0].weight>0 && splitters[addrSplitted].destWeights[0].weight<=99){
+            uint8 sum = 0;
+            for (uint8 i=1; i<=6; i++){
+                sum += splitters[addrSplitted].destWeights[i].weight;
+            }
+            if(sum == 100){
+                bSplitWeightsAreValid = true;
+            }
+        }
+    }
+    
+    function isSplitter(address addr) public view returns (bool bAddrIsSplitter) {
+        return splitters[addr].destWeights[0].weight != 0;
+    }
 }
