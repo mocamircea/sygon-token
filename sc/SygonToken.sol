@@ -14,9 +14,9 @@ contract SYGONtoken {
     
     // Supply and quantities
     
-    uint256 nInitialTotalSupply;
-    uint256 nMaxTotalBurnable;
-    uint256 nTotalBurned;
+    uint256 public nInitialTotalSupply;
+    uint256 public nMaxTotalBurnable;
+    uint256 public nTotalBurned;
     
     // Expenditure Destinations
     
@@ -333,20 +333,12 @@ contract SYGONtoken {
     // 
     // Supplies and Quantities
     
-    function totalInitialSupply() public view returns(uint256 nTotalSupply) {
-        return nInitialTotalSupply;
-    }
-    
     function getCirculatingSupply() public view returns (uint256 nTotalInCirculation) {
         return (nInitialTotalSupply - balances[addrCreator]) - nTotalBurned;
     }
     
     function getRemainingReleasableSupply() public view returns (uint256 nTotalRemainingReleasable) {
         return balances[addrCreator];
-    }
-    
-    function getTotalBurned() public view returns (uint256 nTotalBurnedQuantity) {
-        return nTotalBurned;
     }
     
     // -----------------
