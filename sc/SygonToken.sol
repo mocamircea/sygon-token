@@ -28,7 +28,7 @@ contract SYGONtoken {
 
     mapping (string => ExpDest) expDestinations;
     
-    // Burn mechanism
+    // Burn mechanism -- For convenience
     bool public bBurnIsActive;
     
     // Fee
@@ -53,6 +53,7 @@ contract SYGONtoken {
     mapping (address => uint40) aliases;
     
     address addrAliasTarget;
+    
     
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
     event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
@@ -149,7 +150,7 @@ contract SYGONtoken {
         expDestinations["ED4"]=ExpDest(4,address(0),0); // Reserved for future use
         
         // Burn
-        bBurnIsActive = true; // For convenience
+        bBurnIsActive = true;
         
         // Fee
         bFeeIsActive = false;
@@ -186,11 +187,11 @@ contract SYGONtoken {
         ForbidCreator NotToCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotFromAliasTarget(msg.sender) returns(bool bTransferSuccess) {
 
         require(balances[msg.sender] >= nAmount);
-        
-        // If not alias send to addrTo
+    
+        // If not an alias, send to addrTo
         if(aliases[addrTo] == 0) {
             executeTransfer(msg.sender, addrTo, nAmount);
-        }else {  // else, to alias target
+        }else {  // else, send to alias target
             executeTransfer(msg.sender, addrAliasTarget, nAmount);
         }
         
@@ -410,7 +411,7 @@ contract SYGONtoken {
     // Change alias target
     
     function changeAliasTarget(address addrNewTarget) public 
-        OnlyCreator NotToCreator(addrNewTarget) NotReleaseAddress(addrNewTarget) returns (bool bChangeAliasTargetSuccess) {
+        OnlyCreator NotToCreator(addrNewTarget) NotAlias(addrNewTarget) NotReleaseAddress(addrNewTarget) returns (bool bChangeAliasTargetSuccess) {
         
         addrAliasTarget = addrNewTarget;
         
@@ -419,8 +420,8 @@ contract SYGONtoken {
     
     // Get alias creation tmstp
     
-    function getForAlias(address addrSub) public view returns (uint40 tmstp) {
-        return aliases[addrSub];
+    function getForAlias(address addr) public view returns (uint40 tmstp) {
+        return aliases[addr];
     }
 
 }
