@@ -461,6 +461,8 @@ contract SYGONtoken {
     // Add new splitter
     
     function addSplitter(address addrDest1, uint8 w1, address addrDest2) public returns (bool bAddSplitterSuccess) {
+        require(msg.sender != addrDest1);
+        require(msg.sender != addrDest2);
         require(addrDest1 != addrDest2);
         require(w1>0 && w1<=100);
         
@@ -478,26 +480,25 @@ contract SYGONtoken {
     // Set a splitter
     
     function setSplitter(address addrSplitted, uint8 nPos, address addrDest, uint8 nWeight) public returns (bool bSetSplitterSuccess) {
-        if(msg.sender == addrSplitted && nPos >= 0 && nPos <= 6){
+        if(msg.sender == addrSplitted && nPos == 0){
             splitters[addrSplitted].destWeights[nPos] = SplitWeight(addrDest, nWeight);
             bSetSplitterSuccess = true;
         }else{
-            if(msg.sender == splitters[addrSplitted].destWeights[6].dest && nPos >= 7 && nPos <= 11){
+            if(msg.sender == splitters[addrSplitted].destWeights[1].dest && nPos >= 2 && nPos <= 6){
                 splitters[addrSplitted].destWeights[nPos] = SplitWeight(addrDest, nWeight);
                 bSetSplitterSuccess = true;
             }
         }
-        
-        return bSetSplitterSuccess;
     }
     
     // Change own address in existent splitter
     
     function changeDestinationInSplitter(address addrSplitted, address addrNew) public returns (bool bChangeDestInSplitterSuccess) {
-        for (uint i = 0; i<=11; i++){
+        for (uint i = 0; i<=6; i++){
             if(splitters[addrSplitted].destWeights[i].dest == msg.sender) {
                 splitters[addrSplitted].destWeights[i].dest = addrNew;
                 bChangeDestInSplitterSuccess = true;
+                break;
             }
         }
     }
