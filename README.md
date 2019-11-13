@@ -62,12 +62,13 @@ Method INPUT<br/>
   <tr><td>4</td><td>ED4</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
     </table>
     
-    <b><i>transferSplit</i></b><br/><br/>
+  </p>
+  <p>
+  <b><i>transferSplit</i></b><br/><br/>
     This is a special method of token transfer. The function is internal and it is called automatically, when 
     the target address of a transfer is identified as a splitted address. This mechanism is called splitter.<br/><br/>
     If an address that is registered as splitter, any amount received by the address is "forwarded" as transfers to other target addresses, according to a predefined split schema.
   </p>
-  
 <h3>2 Fractionable</h3>
 <p>
     The SYGON token is fractionable. Having 18 decimals, the smallest transferrable amount is 0.000000000000000001 SYGON tokens.
