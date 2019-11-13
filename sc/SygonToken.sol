@@ -31,13 +31,14 @@ contract SYGONtoken {
     // Burn mechanism -- For checking convenience
     bool public bBurnIsActive;
     
-    // Fee
+    // Fee mechanism
     bool public bFeeIsActive;
     address public addrFees;
     
     struct feeThreshold {
-        uint256 threshold;
-        uint256 factor;
+        uint256 nAmount;
+        uint256 nFactor;
+        uint256 nDecimals;
     }
     
     mapping (uint8 => feeThreshold) feeSettings;
@@ -46,12 +47,12 @@ contract SYGONtoken {
     
     // Splitters
     struct SplitWeight {
-        address dest;
+        address addr;
         uint8 weight;
     }
     
     struct SplitSchema {
-        SplitWeight[] destWeights;
+        SplitWeight[] destinations;
         uint40 nExpiry;
     }
     
@@ -161,10 +162,13 @@ contract SYGONtoken {
         bBurnIsActive = true;
         
         // Fee
-        bFeeIsActive = false;
+        bFeeIsActive = true; // Fee is inactive until all initial supply is released
         addrFees = address(0);
         addrFeeChanger = addrCreator;
-        //feeSettings[0] = 
+        // 000000000000000000
+        feeSettings[0] = feeThreshold(1000000000000000000000,15,4);
+        feeSettings[1] = feeThreshold(10000000000000000000000,90,4);
+        feeSettings[2] = feeThreshold(0,5,5);
         
         // Alias target
         addrAliasTarget = address(0x0014723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
@@ -281,13 +285,13 @@ contract SYGONtoken {
     
     function transferSplit(address addrFrom, uint256 nAmount) internal {
         
-            uint256 nCalcAmount = (nAmount * splitters[addrFrom].destWeights[0].weight)/100;
-            executeTransfer(addrFrom, splitters[addrFrom].destWeights[0].dest, nCalcAmount);
+            uint256 nCalcAmount = (nAmount * splitters[addrFrom].destinations[0].weight)/100;
+            executeTransfer(addrFrom, splitters[addrFrom].destinations[0].addr, nCalcAmount);
             nCalcAmount = nAmount-nCalcAmount;
             
             for(uint8 i = 1; i<=6; i++){
-                if(splitters[addrFrom].destWeights[i].weight>0){
-                    executeTransfer(addrFrom, splitters[addrFrom].destWeights[i].dest, (nCalcAmount*splitters[addrFrom].destWeights[i].weight)/100);
+                if(splitters[addrFrom].destinations[i].weight>0){
+                    executeTransfer(addrFrom, splitters[addrFrom].destinations[i].addr, (nCalcAmount*splitters[addrFrom].destinations[i].weight)/100);
                 }
             }
         
@@ -390,30 +394,42 @@ contract SYGONtoken {
     // -----------------
     // FEE MECHANISM
     
-    function calculateFee(uint256 nAmount) internal view
+    function calculateFee(uint256 nAmount) public view
         returns(uint256 nFee) {
             
         if (bFeeIsActive){
-            
+            if (nAmount > 0 && nAmount <= feeSettings[0].nAmount) {
+                nFee = (nAmount * feeSettings[0].nFactor)/(uint256(10)**feeSettings[0].nDecimals);
+            }else{
+                if (nAmount > feeSettings[0].nAmount && nAmount <= feeSettings[1].nAmount) {
+                    nFee = 2;//(nAmount * feeSettings[1].nFactor)/(uint256(10)**feeSettings[1].nDecimals);
+                }else{
+                    if (nAmount > feeSettings[1].nAmount) {
+                        nFee = 3;//(nAmount * feeSettings[2].nFactor)/(uint256(10)**feeSettings[2].nDecimals);
+                    }
+                }
+            }
         }else {
-            nFee = nAmount +0;
+            nFee = 0;
         }
         
-        return nFee;
+        //nFee = 13;
     }
     
     function changeFeeChanger(address addrNewChanger) public returns (bool bChangeFeeChangerSuccess){
-        bChangeFeeChangerSuccess = false;
         require(msg.sender == addrFeeChanger);
         addrFeeChanger = addrNewChanger;
         bChangeFeeChangerSuccess = true;
     }
     
-    function changeFee(uint8 nFeeID, uint256 nNewFeeThreshold, uint8 nNewFeeFactor) public returns (bool bChangeFeeSuccess) {
+    function changeFeeSetting(uint8 nFeeID, uint256 nNewAmount, uint8 nNewFactor, uint8 nNewDecimals) public returns (bool bChangeFeeSuccess) {
         require(msg.sender == addrFeeChanger);
-        require(nNewFeeThreshold > 0 && nNewFeeThreshold < getCirculatingSupply());
-        feeSettings[nFeeID].threshold = nNewFeeThreshold;
-        feeSettings[nFeeID].factor = nNewFeeFactor;
+        
+        require(nNewAmount > 0 && nNewAmount < getCirculatingSupply());
+        feeSettings[nFeeID].nAmount = nNewAmount;
+        feeSettings[nFeeID].nFactor = nNewFactor;
+        feeSettings[nFeeID].nDecimals = nNewDecimals;
+        
         bChangeFeeSuccess = true;
     }
     
@@ -458,13 +474,13 @@ contract SYGONtoken {
         require(addrDest1 != addrDest2);
         require(w1>0 && w1<=100);
         
-        splitters[msg.sender].destWeights.push(SplitWeight(addrDest1,w1));
-        splitters[msg.sender].destWeights.push(SplitWeight(addrDest2,100-w1));
-        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
-        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
-        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
-        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
-        splitters[msg.sender].destWeights.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destinations.push(SplitWeight(addrDest1,w1));
+        splitters[msg.sender].destinations.push(SplitWeight(addrDest2,100-w1));
+        splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         
         return true;
     }
@@ -473,11 +489,11 @@ contract SYGONtoken {
     
     function setSplitter(address addrSplitted, uint8 nPos, address addrDest, uint8 nWeight) public returns (bool bSetSplitterSuccess) {
         if(msg.sender == addrSplitted && nPos == 0){
-            splitters[addrSplitted].destWeights[nPos] = SplitWeight(addrDest, nWeight);
+            splitters[addrSplitted].destinations[nPos] = SplitWeight(addrDest, nWeight);
             bSetSplitterSuccess = true;
         }else{
-            if(msg.sender == splitters[addrSplitted].destWeights[1].dest && nPos >= 2 && nPos <= 6){
-                splitters[addrSplitted].destWeights[nPos] = SplitWeight(addrDest, nWeight);
+            if(msg.sender == splitters[addrSplitted].destinations[1].addr && nPos >= 2 && nPos <= 6){
+                splitters[addrSplitted].destinations[nPos] = SplitWeight(addrDest, nWeight);
                 bSetSplitterSuccess = true;
             }
         }
@@ -487,8 +503,8 @@ contract SYGONtoken {
     
     function changeDestinationInSplitter(address addrSplitted, address addrNew) public returns (bool bChangeDestInSplitterSuccess) {
         for (uint i = 0; i<=6; i++){
-            if(splitters[addrSplitted].destWeights[i].dest == msg.sender) {
-                splitters[addrSplitted].destWeights[i].dest = addrNew;
+            if(splitters[addrSplitted].destinations[i].addr == msg.sender) {
+                splitters[addrSplitted].destinations[i].addr = addrNew;
                 bChangeDestInSplitterSuccess = true;
                 break;
             }
@@ -498,10 +514,10 @@ contract SYGONtoken {
     // Check if split weights are valid
     
     function splitWeightsValid(address addrSplitted) public view returns (bool bSplitWeightsAreValid) {
-        if(splitters[addrSplitted].destWeights[0].weight>0 && splitters[addrSplitted].destWeights[0].weight<=99){
+        if(splitters[addrSplitted].destinations[0].weight>0 && splitters[addrSplitted].destinations[0].weight<=99){
             uint8 sum = 0;
             for (uint8 i=1; i<=6; i++){
-                sum += splitters[addrSplitted].destWeights[i].weight;
+                sum += splitters[addrSplitted].destinations[i].weight;
             }
             if(sum == 100){
                 bSplitWeightsAreValid = true;
@@ -510,6 +526,6 @@ contract SYGONtoken {
     }
     
     function isSplitter(address addr) public view returns (bool bAddrIsSplitter) {
-        return splitters[addr].destWeights[0].weight != 0;
+        return splitters[addr].destinations[0].weight != 0;
     }
 }
