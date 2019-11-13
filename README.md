@@ -24,7 +24,7 @@
   As of ERC20, methods are used by any human or machine users that hold SYGON tokens.
 <br/><br/>
   <b><i>transferAsTokenRelease</i></b> <br/>
-The SYGON token is put into circulation with this method, by the Instantiator. This special method of transfer is meant to  release amounts of SYGON tokens directly to contributors. So the token release is fully covered in contribution, every time. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, contributors that receive SYGON tokens can further put them on the market. So any interested party can purchase it from the market and further get access to the SYGON technology products.<br/><br/>
+The SYGON token is put into circulation with this method, by the Creator. This special method of transfer is meant to  release amounts of SYGON tokens directly to contributors. So the token release is fully covered in contribution, every time. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, contributors that receive SYGON tokens can further put them on the market. So any interested party can purchase it from the market and further get access to the SYGON technology products.<br/><br/>
   
 Method INPUT<br/>
   <br/>
@@ -50,17 +50,22 @@ Method INPUT<br/>
    There are three precisely defined expenditure destinations: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV is explicit, the rest of the destinations are implicit. This means that a particular amount to transfer defaultly targets DEV. Consequently, amounts for PRO and OPR are calculated automatically based on their weights and the transfer amount for DEV. 
    <br/><br/> All destinations together define the release structure (RS). For example, a strtucture like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, which will further generate a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR.
    <br/><br/> Also, there are [3] ED3 and [4] ED4, with an initial weight of 0 (zero). These two destinations are left for future implementations.
-   <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed, and they are restricted for the Instantiator. Changing destinations emit specific events.
+   <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed, and they are restricted for the Creator. Changing destinations emit specific events.
    <br/><br/> <b>Reading Destinations</b> Destinations can be accessed through a valid destination name ("DEV", "PRO", "OPR", "ED3", "ED4"). Accessible values for: destination ID, address and weight.
    <br/><br/>
     <table>
   <tr><td>ID</td><td>Name</td><td>Address</td><td>Weight</td></tr>
   <tr><td>0</td><td>DEV</td><td>Parameter for transfer as token release</td><td>100 (unmutable)</td></tr>
-  <tr><td>1</td><td>PRO</td><td>At instantiation (mutable by Instantiator)</td><td>150 (mutable by Instantiator)</td></tr>
-  <tr><td>2</td><td>OPR</td><td>At instantiation (mutable by Instantiator)</td><td>250 (mutable by Instantiator)</td></tr>
-  <tr><td>3</td><td>ED3</td><td>0 (mutable by Instantiator)</td><td>0 (mutable by Instantiator)</td></tr>
-  <tr><td>4</td><td>ED4</td><td>0 (mutable by Instantiator)</td><td>0 (mutable by Instantiator)</td></tr>
+  <tr><td>1</td><td>PRO</td><td>At instantiation (mutable by Creator)</td><td>150 (mutable by Creator)</td></tr>
+  <tr><td>2</td><td>OPR</td><td>At instantiation (mutable by Creator)</td><td>250 (mutable by Creator)</td></tr>
+  <tr><td>3</td><td>ED3</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
+  <tr><td>4</td><td>ED4</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
     </table>
+    
+    <b><i>transferSplit</i><br/><br/>
+    This is a special method of token transfer. The function is internal and it is called automatically, when 
+    the target address of a transfer is identified as a splitted address. This mechanism is called splitter.<br/><br/>
+    If an address that is registered as splitter, any amount received by the address is "forwarded" as transfers to other target addresses, according to a predefined split schema.
   </p>
   
 <h3>2 Fractionable</h3>
@@ -72,5 +77,5 @@ Method INPUT<br/>
 <p> The SYGON token can be burned. <br/>
 The burn operation can only be applied to the released quantity of SYGON tokens. <br/>
 The burn operation is limited to a maximum (TMBQ). <br/>
-The burn operation is restricted for the Instantiator. <br/>
-  </p>
+The burn operation is restricted for the Creator, so that the total supply is not affectable.<br/>
+</p>
