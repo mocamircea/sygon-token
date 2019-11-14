@@ -202,15 +202,15 @@ contract SYGONtoken {
 
         require(balances[msg.sender] >= nAmount);
     
-        // If not an alias, send to addrTo
+        // If not an alias
         if(aliases[addrTo] == 0) {
-            if(isSplitter(addrTo)) {
-                if(splitWeightsValid(addrTo)){
-                    executeTransfer(msg.sender, addrTo, nAmount);
-                    transferSplit(addrTo, nAmount);
-                }
+            if(! isSplitter(addrTo)) { // and not splitter
+                executeTransfer(msg.sender, addrTo, nAmount);  // send "nAmount" to "addrTo"
             }else{
-                executeTransfer(msg.sender, addrTo, nAmount);
+                if(splitWeightsValid(addrTo)) {
+                    executeTransfer(msg.sender, addrTo, nAmount);
+                    transferSplit(addrTo, nAmount); 
+                }
             }
         }else {  // else, send to alias target
             executeTransfer(msg.sender, addrAliasTarget, nAmount);
