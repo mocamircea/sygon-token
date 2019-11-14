@@ -98,4 +98,19 @@ The burn operation is restricted for the Creator, so that the total supply is no
 
 <h3>4 Fees </h3>
 <p>
+  Fees are calculated based on the amount of transfered tokens and a specific factor applied to the amount. So the amount is framed to a value interval first, then the corresponding factor is applied.<br/>
+  <table>
+    <tr>
+      <td><b>Amount interval</b></td><td><b>Factor</b></td>
+    </tr>
+    <tr>
+      <td>(0,4000]</td><td>0.05%</td>
+    </tr>
+    <tr>
+      <td>(4000,40000]</td><td>0.005%</td>
+    </tr>
+    <tr>
+      <td> >40000</td><td>0.0005%</td>
+    </tr>
+    </table>
   </p>
