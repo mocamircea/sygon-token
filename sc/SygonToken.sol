@@ -234,7 +234,7 @@ contract SYGONtoken {
         }
     }
     
-    function conditionalTransfer(address addrFrom, address addrTo, uint256 nAmount) internal returns (bool bConditionalTransferSuccess) {
+    function conditionalTransfer(address addrFrom, address addrTo, uint256 nAmount) private returns (bool bConditionalTransferSuccess) {
         if(aliases[addrTo] == 0) {  // If not an alias
             if(! isSplitter(addrTo)) { // and not splitter
                 executeTransfer(addrFrom, addrTo, nAmount);  // send "nAmount" to "addrTo"
@@ -325,7 +325,7 @@ contract SYGONtoken {
         if(msg.sender == addrAliasTarget){
            executeTransfer(addrAliasTarget, addrTo, nAmount);
            bTransferFromAliasTargetSuccess = true;
-        }else{
+        }else{ // delegated transfer
             if(allowances[addrAliasTarget][msg.sender]>=nAmount){
                 executeTransfer(addrAliasTarget, addrTo, nAmount);
                 allowances[addrAliasTarget][msg.sender] -= nAmount;
@@ -336,6 +336,7 @@ contract SYGONtoken {
     //
     
     function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private {
+        
         balances[addrFrom] -= nAmount;
         balances[addrTo] += nAmount;
         
@@ -348,8 +349,6 @@ contract SYGONtoken {
     
     function burn(uint256 nAmountToBurn) public 
         ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
-        
-        bBurnSuccess = false;
         
         require (balances[msg.sender] >= nAmountToBurn);
         
@@ -364,8 +363,6 @@ contract SYGONtoken {
                 bBurnIsActive = false;
             }
         }
-        
-        return bBurnSuccess;
     }
     
     // -----------------
@@ -403,28 +400,20 @@ contract SYGONtoken {
     
     function setAddressForExpDest(string sEDName, address addrNew) public
         OnlyCreator NotCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
-            
-        bool bRetSuccess = false;
         
         expDestinations[sEDName].addr = addrNew;
-        bRetSuccess = true;
+        bChangeEDAddressSuccess = true;
         
         emit ChangeEDAddress(sEDName, addrNew);
-        
-        return bRetSuccess;
     }
     
     function setWeightForExpDest(string sEDName, uint8 nNewWeight) public
         OnlyCreator StrictPositive(nNewWeight) OnlyImplicitDestination(sEDName) returns (bool bChangeEDWeightSuccess) {
-            
-        bool bRetSuccess = false;
         
         expDestinations[sEDName].nID = nNewWeight;
-        bRetSuccess = true;
+        bChangeEDWeightSuccess = true;
         
         emit ChangeEDWeight(sEDName, nNewWeight);
-        
-        return bRetSuccess;
     }
     
     // -----------------
@@ -438,10 +427,10 @@ contract SYGONtoken {
                 nFee = (nAmount * feeSettings[0].nFactor)/(uint256(10)**feeSettings[0].nDecimals);
             }else{
                 if (nAmount > feeSettings[0].nAmount && nAmount <= feeSettings[1].nAmount) {
-                    nFee = 2;//(nAmount * feeSettings[1].nFactor)/(uint256(10)**feeSettings[1].nDecimals);
+                    nFee = (nAmount * feeSettings[1].nFactor)/(uint256(10)**feeSettings[1].nDecimals);
                 }else{
                     if (nAmount > feeSettings[1].nAmount) {
-                        nFee = 3;//(nAmount * feeSettings[2].nFactor)/(uint256(10)**feeSettings[2].nDecimals);
+                        nFee = (nAmount * feeSettings[2].nFactor)/(uint256(10)**feeSettings[2].nDecimals);
                     }
                 }
             }
@@ -449,7 +438,6 @@ contract SYGONtoken {
             nFee = 0;
         }
         
-        //nFee = 13;
     }
     
     function changeFeeChanger(address addrNewChanger) public returns (bool bChangeFeeChangerSuccess){
