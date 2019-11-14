@@ -83,11 +83,11 @@ contract SYGONtoken {
     }
     
     modifier PreventBurn (address addr) {
-        require (addr != address(0));
+        require (addr != address(0x0));
         _;
     }
     
-    modifier NotToCreator (address addr) {
+    modifier NotCreator (address addr) {
         require (addr != addrCreator);
         _;
     }
@@ -105,7 +105,7 @@ contract SYGONtoken {
         require (addrRelease != expDestinations["ED3"].addr);
         require (addrRelease != expDestinations["ED4"].addr);
         
-        require (addrRelease != address(0));
+        require (addrRelease != address(0x0));
         _;
     }
     
@@ -133,7 +133,7 @@ contract SYGONtoken {
         _;
     }
     
-    modifier NotFromAliasTarget(address addrCheck) {
+    modifier NotAliasTarget(address addrCheck) {
         require(addrCheck != addrAliasTarget);
         _;
     }
@@ -185,24 +185,25 @@ contract SYGONtoken {
     }
     
     function approve(address addrDelegateSpender, uint256 nAmount) public 
-        ForbidCreator NotToCreator (addrDelegateSpender) returns(bool bApproveSuccess) {
+        ForbidCreator NotCreator(addrDelegateSpender) returns(bool bApproveSuccess) {
         
         require(msg.sender != addrDelegateSpender);
         allowances[msg.sender][addrDelegateSpender] = nAmount;
         emit ApproveDelegateSpender(msg.sender, addrDelegateSpender, nAmount);
         
-        return true;
+        bApproveSuccess = true;
     }
     
     // -----------------
     // TRANSFERS
     
     function transfer(address addrTo, uint256 nAmount) public 
-        ForbidCreator NotToCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotFromAliasTarget(msg.sender) returns(bool bTransferSuccess) {
+        ForbidCreator NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(msg.sender) returns(bool bTransferSuccess) {
 
         require(balances[msg.sender] >= nAmount);
     
-        // If not an alias
+        if(conditionalTransfer(msg.sender, addrTo, nAmount)) {
+        /* // If not an alias
         if(aliases[addrTo] == 0) {
             if(! isSplitter(addrTo)) { // and not splitter
                 executeTransfer(msg.sender, addrTo, nAmount);  // send "nAmount" to "addrTo"
@@ -214,24 +215,41 @@ contract SYGONtoken {
             }
         }else {  // else, send to alias target
             executeTransfer(msg.sender, addrAliasTarget, nAmount);
-        }
+        }*/
         
-        return true;
+            bTransferSuccess = true;
+        }
     }
     
     function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public 
-        ForbidCreator NotToCreator (addrTo) PreventBurn(addrTo) StrictPositive(nAmount) returns (bool bTransferFromSuccess) {
-            
-        bool bRetSuccess = false;
+        ForbidCreator NotCreator(addrFrom) NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(addrFrom) returns (bool bTransferFromSuccess) {
         
         require(balances[addrFrom] >= nAmount);
         require(allowances[addrFrom][msg.sender] >= nAmount);
         
-        executeTransfer(addrFrom,addrTo,nAmount);
-        allowances[addrFrom][msg.sender] -= nAmount;
-        bRetSuccess = true;
-        
-        return bRetSuccess;
+        if(conditionalTransfer(addrFrom, addrTo, nAmount)) {
+        //executeTransfer(addrFrom,addrTo,nAmount);
+            allowances[addrFrom][msg.sender] -= nAmount;
+            bTransferFromSuccess = true;
+        }
+    }
+    
+    function conditionalTransfer(address addrFrom, address addrTo, uint256 nAmount) internal returns (bool bConditionalTransferSuccess) {
+        if(aliases[addrTo] == 0) {  // If not an alias
+            if(! isSplitter(addrTo)) { // and not splitter
+                executeTransfer(addrFrom, addrTo, nAmount);  // send "nAmount" to "addrTo"
+                bConditionalTransferSuccess = true;
+            }else{
+                if(splitWeightsValid(addrTo)) {  // check if splitter is correctly defined
+                    executeTransfer(addrFrom, addrTo, nAmount);
+                    transferSplit(addrTo, nAmount);
+                    bConditionalTransferSuccess = true;
+                }
+            }
+        }else {  // send to alias target
+            executeTransfer(addrFrom, addrAliasTarget, nAmount);
+            bConditionalTransferSuccess = true;
+        }
     }
     
     function transferAsTokenRelease (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentID) 
@@ -297,7 +315,25 @@ contract SYGONtoken {
         
     }
     
-    //function transferFromAliasTarget()
+    function transferFromAliasTarget(address addrTo, uint256 nAmount) public 
+        StrictPositive(nAmount) returns(bool bTransferFromAliasTargetSuccess) {
+        
+        require(msg.sender == addrAliasTarget || allowances[addrAliasTarget][msg.sender]>0);
+        require(isSplitter(addrTo));
+        require(balances[addrAliasTarget] >= nAmount);
+        
+        if(msg.sender == addrAliasTarget){
+           executeTransfer(addrAliasTarget, addrTo, nAmount);
+           bTransferFromAliasTargetSuccess = true;
+        }else{
+            if(allowances[addrAliasTarget][msg.sender]>=nAmount){
+                executeTransfer(addrAliasTarget, addrTo, nAmount);
+                allowances[addrAliasTarget][msg.sender] -= nAmount;
+                bTransferFromAliasTargetSuccess = true;
+            }
+        }
+    }
+    //
     
     function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private {
         balances[addrFrom] -= nAmount;
@@ -366,7 +402,7 @@ contract SYGONtoken {
     // Only Implicit Destinations can only have Address and Weight modified
     
     function setAddressForExpDest(string sEDName, address addrNew) public
-        OnlyCreator NotToCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
+        OnlyCreator NotCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
             
         bool bRetSuccess = false;
         
@@ -450,7 +486,7 @@ contract SYGONtoken {
     // Change alias target
     
     function changeAliasTarget(address addrNewTarget) public 
-        OnlyCreator NotToCreator(addrNewTarget) NotAlias(addrNewTarget) NotReleaseAddress(addrNewTarget) returns (bool bChangeAliasTargetSuccess) {
+        OnlyCreator NotCreator(addrNewTarget) NotAlias(addrNewTarget) NotReleaseAddress(addrNewTarget) returns (bool bChangeAliasTargetSuccess) {
         
         addrAliasTarget = addrNewTarget;
         
