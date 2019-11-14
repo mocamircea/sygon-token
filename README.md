@@ -17,7 +17,7 @@
 The SYGON token implements the SynergyCrowds business model, with a strong focus on monetizing the contribution of sygons to producing knowledge with a decentralzied approach.
 <br/>
 <h2>Features</h2>
-<p>The SYGON token is: fungible, fractionable and burnable </p>
+<p>The SYGON token is: fungible, fractionable and burnable.</p>
 
 <h3>1 Transfers</h3>
 <p>
@@ -26,7 +26,7 @@ The SYGON token implements the SynergyCrowds business model, with a strong focus
   Additional functionality checks if the transfers target <b>aliases</b> or <b>splitters</b>, performing the transfer accordingly.
 <br/><br/>
   <b>Aliases</b><br/>
-  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amounts sent to an alias address is directed automatically to a single address (addrAliasTarget). Aliases are created by the operational entity (SynergyCrowds company) for users. The alias is called <i>Feed address</i> in the SynergyCrowds platform, being allocated when users upgrade to Level 2 their accounts.<br/><br/>
+  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amount sent to an alias address is directed automatically to a unique address (defined by <i>addrAliasTarget</i>). Aliases are created by the operational entity (SynergyCrowds company) for users. The alias is called <i>Feed address</i> in the SynergyCrowds platform, being allocated to accounts when upgraded to Level 2.<br/><br/>
   <b>1.2 <i>transferAsTokenRelease</i></b> <br/>
 The SYGON token is put into circulation with this method, by the Creator. This special method of transfer is meant to  release amounts of SYGON tokens directly to contributors. So the token release is fully covered in contribution, every time. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, contributors that receive SYGON tokens can further put them on the market. So any interested party can purchase it from the market and further get access to the SYGON technology products.<br/>
   
@@ -89,7 +89,7 @@ INPUT<br/>
     The SYGON token is fractionable. Having 18 decimals, the smallest transferrable amount is 0.000000000000000001 SYGON tokens.
   </p>
 
-<h3>3 Burnable</h3>
+<h3>3 Burn</h3>
 <p> The SYGON token can be burned. <br/>
 The burn operation can only be applied to the released quantity of SYGON tokens. <br/>
 The burn operation is limited to a maximum (TMBQ). <br/>
