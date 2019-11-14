@@ -80,7 +80,7 @@ INPUT<br/>
   <p>
   <b>1.4 <i>transferFromAliasTarget</i></b><br/><br/>
     This is a special method of token transfer ensuring that all amounts received to addrAliasTarget are transfered to splitters only. No other destination is possible. This mechanism guarantees to the contributors that all monetization of the delivered knowledge is distributed among them and it is verifiable.<br/><br/>
-  Tranfer from addrAliasTarget can be performed either directly or by delegated transfers.
+  Transfers from addrAliasTarget can be performed either directly or delegated.
   </p>
 <h3>2 Fractionable</h3>
 <p>
