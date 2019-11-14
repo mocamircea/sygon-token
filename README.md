@@ -21,11 +21,11 @@ The SYGON token implements the SynergyCrowds business model, with a strong focus
 
 <h3>1 Transfer of SYGON tokens</h3>
 <p>
-  <b><i>transfer</i></b> and <b><i>transferFrom</i></b><br/>
+  <b>1.1 <i> transfer</i></b> and <b><i>transferFrom</i></b><br/>
   As of ERC20, methods are used by any human or machine users that hold SYGON tokens.<br/>
   An additional functionality checks the transfer targets <b>aliases</b> or <b>splitters</b>, performing the transfer accordingly.
 <br/><br/>
-  <b><i>transferAsTokenRelease</i></b> <br/>
+  <b>1.2 <i>transferAsTokenRelease</i></b> <br/>
 The SYGON token is put into circulation with this method, by the Creator. This special method of transfer is meant to  release amounts of SYGON tokens directly to contributors. So the token release is fully covered in contribution, every time. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, contributors that receive SYGON tokens can further put them on the market. So any interested party can purchase it from the market and further get access to the SYGON technology products.<br/>
   
 INPUT<br/>
@@ -66,7 +66,7 @@ INPUT<br/>
     
   </p>
   <p>
-  <b><i>transferSplit</i></b><br/><br/>
+  <b>1.3 <i>transferSplit</i></b><br/><br/>
     This is a special method of token transfer. The function is internal and it is called automatically, when 
     the target address of a transfer is identified as a splitted address. This mechanism is called splitter.<br/><br/>
     If an address that is registered as splitter, any amount received by the address is "forwarded" as transfers to other target addresses, according to a predefined split schema.<br/><br/>
@@ -75,10 +75,10 @@ INPUT<br/>
   The contributor that creates the splitter is called primary and the second one is called secondary contributor. The secondary contributor can furhter configure the splitter to accept other 5 contributors at choice. When an amount of tokens is received by a splitter, the transfered amounts are calculated based on the split weights defined in the splitter.<br/></br>
   Example:<br/><br/>
   If an application A generates a revenue of 100 tokens, then the contributors of the application A get rewarded through a splitter. The splitter is created by user U1, with a secondary user U2. U2 further adds U3 and U4 to the splitter. Split weights (WSplit) are: WSplit(U1)=30, WSplit(U2)=45, WSplit(U3)=35, WSplit(U4)=20. Any amount of tokens transfered to their splitter will lead to transfers from addrAliasTarget to split destination addresses in the followign amounts: U1=30, U2=31.5, U3=24.5 and U4=14. <br/><br/>
-  In this way, the monetization of the knowledge produced and delivered by the SYGON technology is transparently distributed among all contributors. The SynergyCrowds company, as an operational entity of the products, plays an absolute equal role with other contributors in terms of receiving revenues.
+  In this way, the monetization of the knowledge produced and delivered by the SYGON technology is transparently distributed among all contributors. The SynergyCrowds company, as an operational entity of the products, has an absolutely equal position with other contributors in terms of receiving revenues.
   </p>
   <p>
-  <b><i>transferFromAliasTarget</i></b><br/><br/>
+  <b>1.4 <i>transferFromAliasTarget</i></b><br/><br/>
     This is a special method of token transfer ensuring that all amounts received to addrAliasTarget are transfered to splitters only. No other destination is possible. This mechanism guarantees to the contributors that all monetization of the delivered knowledge is distributed among them and it is verifiable.<br/><br/>
   Tranfer from addrAliasTarget can be performed either directly or by delegated transfers.
   </p>
