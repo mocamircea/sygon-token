@@ -17,7 +17,7 @@
 The SYGON token implements the SynergyCrowds business model, with a strong focus on monetizing the contribution of sygons to producing knowledge with a decentralzied approach.
 <br/>
 <h2>Features</h2>
-<p>Fungible, Fractionable, Burnable </p>
+<p>The SYGON token is: fungible, fractionable and burnable </p>
 
 <h3>1 Transfer of SYGON tokens</h3>
 <p>
