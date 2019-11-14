@@ -19,7 +19,7 @@ The SYGON token implements the SynergyCrowds business model, with a strong focus
 <h2>Features</h2>
 <p>The SYGON token is: fungible, fractionable and burnable </p>
 
-<h3>1 Transfer of SYGON tokens</h3>
+<h3>1 Transfers</h3>
 <p>
   <b>1.1 <i> transfer</i></b> and <b><i>transferFrom</i></b><br/>
   As of ERC20, methods are used by any human or machine users that hold SYGON tokens.<br/>
