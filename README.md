@@ -25,6 +25,8 @@ The SYGON token implements the SynergyCrowds business model, with a strong focus
   As of ERC20, methods are used by any human or machine users that hold SYGON tokens.<br/>
   An additional functionality checks the transfer targets <b>aliases</b> or <b>splitters</b>, performing the transfer accordingly.
 <br/><br/>
+  <b>Aliases</b><br/>
+  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amounts sent to an alias address is directed automatically to a single address (addrAliasTarget). Aliases are created by the operational entity (SynergyCrowds company) for users. The alias is called <i>Feed address</i> in the SynergyCrowds platform, being allocated when users upgrade to Level 2 their accounts.<br/><br/>
   <b>1.2 <i>transferAsTokenRelease</i></b> <br/>
 The SYGON token is put into circulation with this method, by the Creator. This special method of transfer is meant to  release amounts of SYGON tokens directly to contributors. So the token release is fully covered in contribution, every time. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, contributors that receive SYGON tokens can further put them on the market. So any interested party can purchase it from the market and further get access to the SYGON technology products.<br/>
   
