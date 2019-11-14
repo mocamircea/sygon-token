@@ -23,7 +23,7 @@ The SYGON token implements the SynergyCrowds business model, with a strong focus
 <p>
   <b>1.1 <i> transfer</i></b> and <b><i>transferFrom</i></b><br/>
   As of ERC20, methods are used by any human or machine users that hold SYGON tokens.<br/>
-  An additional functionality checks the transfer targets <b>aliases</b> or <b>splitters</b>, performing the transfer accordingly.
+  Additional functionality checks if the transfers target <b>aliases</b> or <b>splitters</b>, performing the transfer accordingly.
 <br/><br/>
   <b>Aliases</b><br/>
   Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amounts sent to an alias address is directed automatically to a single address (addrAliasTarget). Aliases are created by the operational entity (SynergyCrowds company) for users. The alias is called <i>Feed address</i> in the SynergyCrowds platform, being allocated when users upgrade to Level 2 their accounts.<br/><br/>
