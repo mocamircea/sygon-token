@@ -1,1 +1,29 @@
 # Use cases
+Create contract
+Transfer as token release
+Transfer
+Transfer to
+Conditional transfer
+Execute transfer
+Check balance
+Check allowance
+Approve (delegated transfer)
+Tranfer split
+Transfer from alias target
+Create a splitter
+Burn
+Calculate circulating supply
+Calculate remaining releasable supply
+Change address for expenditure destination
+Change weight for expenditure destination
+Calculate fee
+Change fee (changer)
+Change fee settings
+Add new alias
+Change alias target address
+Get creation for alias
+Add new splitter
+Configure/ set splitter
+Change destination address in existent splitter
+Validate splitter
+Check if address is splitter
