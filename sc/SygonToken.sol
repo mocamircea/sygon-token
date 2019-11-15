@@ -33,16 +33,17 @@ contract SYGONtoken {
     
     // Fee mechanism
     bool public bFeeIsActive;
-    address public addrFees;
+    address public addrFees; // Collected fees
+    uint8 nBurnFromFeeQuota; // Quota to burn from collected fees
     
-    struct feeThreshold {
+    struct feeSetting {
         uint256 nAmount;
         uint256 nFactor;
         uint256 nDecimals;
     }
     
-    mapping (uint8 => feeThreshold) feeSettings;
-    address public addrFeeChanger;
+    mapping (uint8 => feeSetting) feeSettings;
+    address public addrFeeManager;
     
     
     // Splitters
@@ -65,11 +66,12 @@ contract SYGONtoken {
     
     
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
-    event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount);
+    event Transfer(address indexed addrSender, address indexed addrTo, uint256 nTransferredAmount, bool indexed bIsFee);
     event TransferTokenRelease(address indexed addrTo, uint32 indexed nProjectID, uint32 indexed nExpDestination, uint8 nInstallmentNumber);
     event Burn(address indexed addrBurnFrom, uint256 nAmount);
     event ChangeEDAddress(string indexed sEDName, address indexed addrNewAddress);
     event ChangeEDWeight(string indexed sEDName, uint8 nNewWeight);
+    event ChangeBurnFromFeeQuota(address indexed addrFeeManager, uint8 nNewQuota);
     
     
     modifier OnlyCreator () {
@@ -151,7 +153,7 @@ contract SYGONtoken {
         // Expenditure Destinations
         
         // Explicit
-        expDestinations["DEV"]=ExpDest(0,address(0),100); // Only for coherence with implicit destinations in getters
+        expDestinations["DEV"]=ExpDest(0,address(0x0),100); // Only for coherence with implicit destinations in getters, address is never used
         // Implicit
         expDestinations["PRO"]=ExpDest(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
         expDestinations["OPR"]=ExpDest(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
@@ -163,15 +165,17 @@ contract SYGONtoken {
         
         // Fee
         bFeeIsActive = true; // Fee is inactive until all initial supply is released
-        addrFees = address(0);
-        addrFeeChanger = addrCreator;
-        // 000000000000000000
-        feeSettings[0] = feeThreshold(1000000000000000000000,15,4);
-        feeSettings[1] = feeThreshold(10000000000000000000000,90,4);
-        feeSettings[2] = feeThreshold(0,5,5);
+        addrFees = address(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);
+        addrFeeManager = addrCreator;
+        
+        // 3 Fee intervals
+        feeSettings[0] = feeSetting(1000000000000000000000,15,4);
+        feeSettings[1] = feeSetting(10000000000000000000000,90,4);
+        feeSettings[2] = feeSetting(0,5,6);
+        nBurnFromFeeQuota = 100;
         
         // Alias target
-        addrAliasTarget = address(0x0014723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
+        addrAliasTarget = address(0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
         
     }
 
@@ -336,11 +340,21 @@ contract SYGONtoken {
     //
     
     function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private {
+        // Calculate FEE
+        uint256 nFee = calculateFee(nAmount);
+        uint256 nNetAmount = nAmount-nFee;
         
-        balances[addrFrom] -= nAmount;
-        balances[addrTo] += nAmount;
+        // Transfer net amount
+        balances[addrFrom] -= nNetAmount;
+        balances[addrTo] += nNetAmount;
+        emit Transfer(addrFrom, addrTo, nAmount, false);
         
-        emit Transfer(addrFrom, addrTo, nAmount);
+        // Transfer fee
+        if(nFee>0){
+            balances[addrFrom] -= nFee;
+            balances[addrFees] += nFee;
+            emit Transfer(addrFrom, addrFees, nFee, true);
+        }
     }
 
     
@@ -440,21 +454,30 @@ contract SYGONtoken {
         
     }
     
-    function changeFeeChanger(address addrNewChanger) public returns (bool bChangeFeeChangerSuccess){
-        require(msg.sender == addrFeeChanger);
-        addrFeeChanger = addrNewChanger;
-        bChangeFeeChangerSuccess = true;
+    function changeFeeManager(address addrNewManager) public returns (bool bChangeFeeManagerSuccess){
+        require(msg.sender == addrFeeManager);
+        addrFeeManager = addrNewManager;
+        bChangeFeeManagerSuccess = true;
     }
     
     function changeFeeSetting(uint8 nFeeID, uint256 nNewAmount, uint8 nNewFactor, uint8 nNewDecimals) public returns (bool bChangeFeeSuccess) {
-        require(msg.sender == addrFeeChanger);
-        
+        require(msg.sender == addrFeeManager);
+        require(nFeeID>=0 && nFeeID<=2);
         require(nNewAmount > 0 && nNewAmount < getCirculatingSupply());
         feeSettings[nFeeID].nAmount = nNewAmount;
         feeSettings[nFeeID].nFactor = nNewFactor;
         feeSettings[nFeeID].nDecimals = nNewDecimals;
         
         bChangeFeeSuccess = true;
+    }
+    
+    function changeBurnFromFeeQuota(uint8 nQuota) public returns (bool bChangeBurnFromFeeQuotaSuccess){
+        require(msg.sender==addrFeeManager);
+        require(nQuota>=20 && nQuota<=100);
+        nBurnFromFeeQuota = nQuota;
+        emit ChangeBurnFromFeeQuota(addrFeeManager, nQuota);
+        
+        bChangeBurnFromFeeQuotaSuccess = true;
     }
     
     // -----------------
@@ -481,7 +504,7 @@ contract SYGONtoken {
         return true;
     }
     
-    // Get alias creation tmstp
+    // Get alias creation timestamp
     
     function getForAlias(address addr) public view returns (uint40 tmstp) {
         return aliases[addr];
@@ -505,13 +528,14 @@ contract SYGONtoken {
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
+        splitters[msg.sender].nExpiry = 1;
         
         return true;
     }
     
-    // Set a splitter
+    // Configure a splitter
     
-    function setSplitter(address addrSplitted, uint8 nPos, address addrDest, uint8 nWeight) public returns (bool bSetSplitterSuccess) {
+    function configSplitter(address addrSplitted, uint8 nPos, address addrDest, uint8 nWeight) public returns (bool bSetSplitterSuccess) {
         if(msg.sender == addrSplitted && nPos == 0){
             splitters[addrSplitted].destinations[nPos] = SplitWeight(addrDest, nWeight);
             bSetSplitterSuccess = true;
@@ -523,7 +547,7 @@ contract SYGONtoken {
         }
     }
     
-    // Change own address in existent splitter
+    // Change own address in splitter
     
     function changeDestinationInSplitter(address addrSplitted, address addrNew) public returns (bool bChangeDestInSplitterSuccess) {
         for (uint i = 0; i<=6; i++){
@@ -549,7 +573,9 @@ contract SYGONtoken {
         }
     }
     
+    // Check if splitter
+    
     function isSplitter(address addr) public view returns (bool bAddrIsSplitter) {
-        return splitters[addr].destinations[0].weight != 0;
+        return splitters[addr].nExpiry != 0;
     }
 }
