@@ -72,12 +72,24 @@ INPUT<br/>
     This is a special method of token transfer. The function is internal and it is called automatically, when 
     the target address of a transfer is identified as a splitted address. This mechanism is called splitter.<br/><br/>
     If an address that is registered as splitter, any amount received by the address is "forwarded" as transfers to other target addresses, according to a predefined split schema.<br/><br/>
+  
   <b>Splitters</b><br/>
   A splitter associates an address with a split schema. A split schema defines a set of transfer destinations with weights. This mechanism allows at least two contributors to get monetized for their contributions.<br/><br/>
-  The contributor that creates the splitter is called primary and the second one is called secondary contributor. The secondary contributor can furhter configure the splitter to accept other 5 contributors at choice. When an amount of tokens is received by a splitter, the transfered amounts are calculated based on the split weights defined in the splitter.<br/></br>
+  The contributor that creates the splitter is called primary and the second one is called secondary contributor. The secondary contributor can furhter configure the splitter by managing other 5 contributors at choice. When an amount of tokens is received by a splitter, the transfered amounts are calculated based on the split weights defined in the splitter.<br/></br>
+  Splitter structure <br/>
+  <table>
+  <tr><td>Primary</td><td>Secondary</td><td>Managed1</td><td>Managed2</td><td>Managed3</td><td>Managed4</td><td>Managed5</td></tr>
+  <tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+  </table>
+  <br/><br>
   Example:<br/><br/>
   If an application A generates a revenue of 100 tokens, then the contributors of the application A get rewarded through a splitter. The splitter is created by user U1, with a secondary user U2. U2 further adds U3 and U4 to the splitter. Split weights (WSplit) are: WSplit(U1)=30, WSplit(U2)=45, WSplit(U3)=35, WSplit(U4)=20. Any amount of tokens transferred to their splitter will lead to transfers from addrAliasTarget to split destination addresses in the following amounts: U1=30, U2=31.5, U3=24.5 and U4=14. <br/><br/>
-  In this way, the monetization of the knowledge produced and delivered by the SYGON technology is transparently distributed among all contributors. The SynergyCrowds company, as an operational entity of the products, has an absolutely equal position with other contributors in terms of receiving revenues.
+  In this way, the monetization of the knowledge produced and delivered by the SYGON technology is transparently distributed among all contributors. The SynergyCrowds company, as an operational entity of the products, has an absolutely equal position with other contributors in terms of receiving revenues.<br/><br/>
+  Any member of a splitter can change own address within the splitter.<br/><br/>
+  <b>Configuring a splitter</b><br/><br/>
+  The primary contributor can change any destination address and weight in the splitter. The secondary contributor can change the address and weight of the 5 managed destinations.<br/>
+  Restriction: successfully transferring to a splitter requires that its weights must be configured correctly, namely the sum of the weights of the last 6 destinations must be 100.<br/>
+  
   </p>
   <p>
   <b>1.4 <i>transferFromAliasTarget</i></b><br/><br/>
