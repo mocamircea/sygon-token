@@ -1,20 +1,20 @@
 # UC3 Transfer as token release
 
-The Creator transfers an amount X to an address of "DEV" destination at choice.
+Tokens are released from the <i>balances[addrCreator]</i> by this method exclusively. There is no other way to release tokens.
 
-Tokens can be released from the <i>nInitialTotalSupply</i> by this method exclusively. There is no other way to release tokens.
+Tokens can be released until the remaining releasable supply is 0 (<i>balances[addrCreator]</i> is 0).
 
-Tokens can be released until <i>nInitialTotalSupply</i> is 0 (zero).
+A token release is: the Creator transfers an amount X to a project developer (to address with "DEV" destination) at choice.
 
-For any amount X, the corresponding amounts for all other 4 destinations are computed. Amounts for all release destinations must be successfuly transferred.
+For any transferred amount X, the corresponding amounts for all other 4 destinations are automatically computed. Amounts for all release destinations must be successfully transferred.
 
-<i>Transfer</i> event is emitted for each particular transfer (from Creator balance to the release destinations).
+<i>Transfer</i> event is emitted for each particular transfer (from Creator's balance to the release destinations).
 
-After the transfer, all balances (Creator + release destinations) are showing the correct amounts - the sum of the additions for the release destinations = the amount debited from Creator.
+After the transfer, all balances (Creator + release destinations) have the correct amounts - the sum of the credited amounts for the release destinations = the amount debited from Creator's balance.
 
-A fee is applied to each transfer from Creator to release destinations.
+A fee is applied to each transfer from Creator to the release destinations.
 
-The amount collected by <i>addrFees</i> is correct.
+The corresponding amount collected in <i>addrFees</i> is correct (according to the applied rates).
 
 
 
