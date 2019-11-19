@@ -18,7 +18,7 @@ contract SYGONtoken {
     uint256 public nMaxTotalBurnable;
     uint256 public nTotalBurned;
     
-    // Expenditure Destinations
+    // Expenditure Destination (for token release)
     
     struct ExpDest{
         uint8 nID;
@@ -36,6 +36,7 @@ contract SYGONtoken {
     address public addrFees; // Collected fees
     uint8 nBurnFromFeeQuota; // Quota to burn from collected fees
     
+    // Implement fee thresholds according to amount intervals
     struct feeSetting {
         uint256 nAmount;
         uint256 nFactor;
@@ -43,7 +44,7 @@ contract SYGONtoken {
     }
     
     mapping (uint8 => feeSetting) feeSettings;
-    address public addrFeeManager;
+    //address public addrFeeManager;
     
     
     // Splitters
@@ -72,6 +73,7 @@ contract SYGONtoken {
     event ChangeEDAddress(string indexed sEDName, address indexed addrNewAddress);
     event ChangeEDWeight(string indexed sEDName, uint8 nNewWeight);
     event ChangeBurnFromFeeQuota(address indexed addrFeeManager, uint8 nNewQuota);
+    event ChangeFeesAddress(address indexed addrNewAddress);
     
     
     modifier OnlyCreator () {
@@ -140,6 +142,11 @@ contract SYGONtoken {
         _;
     }
     
+    modifier NotFromFees(address addrFrom) {
+        require(addrFrom != addrFees);
+        _;
+    }
+    
     constructor() public {
         addrCreator = msg.sender;
         nDecimals = 18;
@@ -164,9 +171,9 @@ contract SYGONtoken {
         bBurnIsActive = true;
         
         // Fee
-        bFeeIsActive = true; // Fee is inactive until all initial supply is released
+        bFeeIsActive = true;
         addrFees = address(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);
-        addrFeeManager = addrCreator;
+        //addrFeeManager = addrCreator;  // Initially the creator, then changed to 
         
         // 3 Fee intervals
         feeSettings[0] = feeSetting(1000000000000000000000,15,4);
@@ -202,7 +209,7 @@ contract SYGONtoken {
     // TRANSFERS
     
     function transfer(address addrTo, uint256 nAmount) public 
-        ForbidCreator NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(msg.sender) returns(bool bTransferSuccess) {
+        ForbidCreator NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(msg.sender) NotFromFees(msg.sender) returns(bool bTransferSuccess) {
 
         require(balances[msg.sender] >= nAmount);
     
@@ -226,7 +233,7 @@ contract SYGONtoken {
     }
     
     function transferFrom(address addrFrom, address addrTo, uint256 nAmount) public 
-        ForbidCreator NotCreator(addrFrom) NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(addrFrom) returns (bool bTransferFromSuccess) {
+        ForbidCreator NotCreator(addrFrom) NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(addrFrom) NotFromFees(addrFrom) returns (bool bTransferFromSuccess) {
         
         require(balances[addrFrom] >= nAmount);
         require(allowances[addrFrom][msg.sender] >= nAmount);
@@ -431,12 +438,12 @@ contract SYGONtoken {
     }
     
     // -----------------
-    // FEE MECHANISM
+    // FEE
     
     function calculateFee(uint256 nAmount) public view
         returns(uint256 nFee) {
             
-        if (bFeeIsActive){
+        if (bFeeIsActive){ // todo: needed?
             if (nAmount > 0 && nAmount <= feeSettings[0].nAmount) {
                 nFee = (nAmount * feeSettings[0].nFactor)/(uint256(10)**feeSettings[0].nDecimals);
             }else{
@@ -454,14 +461,16 @@ contract SYGONtoken {
         
     }
     
-    function changeFeeManager(address addrNewManager) public returns (bool bChangeFeeManagerSuccess){
-        require(msg.sender == addrFeeManager);
-        addrFeeManager = addrNewManager;
-        bChangeFeeManagerSuccess = true;
+    function changeFeesAddr(address addrNew) public returns (bool bChangeFeesAddrSuccess) {
+        require(msg.sender == addrFees);
+        require(distributeAndBurnFee());
+        addrFees = addrNew;
+        emit ChangeFeesAddress(addrNew);
+        bChangeFeesAddrSuccess = true;
     }
     
     function changeFeeSetting(uint8 nFeeID, uint256 nNewAmount, uint8 nNewFactor, uint8 nNewDecimals) public returns (bool bChangeFeeSuccess) {
-        require(msg.sender == addrFeeManager);
+        require(msg.sender == addrFees);
         require(nFeeID>=0 && nFeeID<=2);
         require(nNewAmount > 0 && nNewAmount < getCirculatingSupply());
         feeSettings[nFeeID].nAmount = nNewAmount;
@@ -471,13 +480,25 @@ contract SYGONtoken {
         bChangeFeeSuccess = true;
     }
     
-    function changeBurnFromFeeQuota(uint8 nQuota) public returns (bool bChangeBurnFromFeeQuotaSuccess){
-        require(msg.sender==addrFeeManager);
+    function changeBurnFromFeeQuota(uint8 nQuota) public returns (bool bChangeBurnFromFeeQuotaSuccess) {
+        require(msg.sender==addrFees);
         require(nQuota>=20 && nQuota<=100);
         nBurnFromFeeQuota = nQuota;
-        emit ChangeBurnFromFeeQuota(addrFeeManager, nQuota);
+        emit ChangeBurnFromFeeQuota(addrFees, nQuota);
         
         bChangeBurnFromFeeQuotaSuccess = true;
+    }
+    
+    function distributeAndBurnFee() public returns (bool bDistrAndBurnFeeSuccess) {
+        require(msg.sender==addrFees);
+        // Calculate amount to Burn
+        if(balances[addrFees]>=100){
+            uint256 nAmountToBurn = (balances[addrFees]*nBurnFromFeeQuota)/100;
+            burn(nAmountToBurn);
+            if(conditionalTransfer(msg.sender, expDestinations["OPR"].addr, balances[addrFees]-nAmountToBurn)){
+                bDistrAndBurnFeeSuccess = true;
+            }
+        }
     }
     
     // -----------------
