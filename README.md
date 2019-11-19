@@ -58,7 +58,7 @@ INPUT<br/>
    <br/><br/> All destinations together define the release structure (RS). For example, a strtucture like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, which will further generate a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR.
    <br/><br/> Also, there are [3] ED3 and [4] ED4, with an initial weight of 0 (zero). These two destinations are left for future implementations.
    <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed, and they are restricted for the Creator. Changing destinations emit specific events.
-   <br/><br/> <b>Reading Destinations</b> Destinations can be accessed through a valid destination name ("DEV", "PRO", "OPR", "ED3", "ED4"). Accessible values for: destination ID, address and weight.
+   <br/><br/> <b>Reading Destinations</b> Destinations can be accessed through a valid destination name ("DEV", "PRO", "OPR", "ED3", "ED4"). The following attributes are available: destination ID, address and weight.
    <br/><br/>
     <table>
   <tr><td>ID</td><td>Name</td><td>Address</td><td>Weight</td></tr>
@@ -79,7 +79,9 @@ INPUT<br/>
   
   <b>Splitters</b><br/>
   A splitter associates an address with a split schema. A split schema defines a set of transfer destinations with weights. This mechanism allows at least two contributors to get monetized for their contributions.<br/><br/>
-  The contributor that creates the splitter is called primary and the second one is called secondary contributor. The secondary contributor can furhter configure the splitter by managing other 5 contributors at choice. When an amount of tokens is received by a splitter, the transfered amounts are calculated based on the split weights defined in the splitter.<br/></br>
+  The contributor that creates the splitter is called primary and the second one is called secondary contributor. The secondary contributor can furhter configure the splitter by managing other 5 contributors at choice. <br/><br/>
+  
+  Any amount of tokens sent to a splitter is automatically distributed among the destinations defined in the split schema.<br/></br>
   Splitter structure <br/>
   <table>
   <tr><td>Primary</td><td>Secondary</td><td>Managed1</td><td>Managed2</td><td>Managed3</td><td>Managed4</td><td>Managed5</td></tr>
@@ -115,8 +117,11 @@ The burn operation is restricted for the Creator, so that the total supply is no
 </p>
 
 <h3>4 Fees </h3>
-<p>
-  Fees are calculated based on the amount of transfered tokens and a specific factor applied to the amount. So the amount is framed to a value interval first, then the corresponding factor is applied.<br/>
+  <p>
+  Fees are applied to all token transfers, except the initial token release transfers.
+  </p>
+  <p>
+  Fees are calculated based on the amount of transferred tokens and a specific factor applied to the amount. So the amount is framed to a value interval first, then the corresponding factor is applied.<br/>
   <table>
     <tr>
       <td><b>Amount interval</b></td><td><b>Fee</b></td>
@@ -131,4 +136,7 @@ The burn operation is restricted for the Creator, so that the total supply is no
       <td> >40000</td><td>0.0005%</td>
     </tr>
     </table>
+  </p>
+  <p>
+  Fees are collected at <i>addrFees</i> and they are periodically distributed - partially to the operator entity (the SynergyCrowds company) and partially burned. The collected fees can be distributed only by using the <i>distributeAndBurnFee</i> function. The proportion to be burned is defined by <i>nBurnFromFeeQuota</i>. This is established through vote, by sygons. 
   </p>
