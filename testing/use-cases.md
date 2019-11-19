@@ -1,30 +1,66 @@
 # Use cases
-Create contract
-Generated getters
-Transfer as token release
+UC1 Create contract
+
+UC2 Access fields (generated getters)
+
+** Transfers **
+
+UC3 Transfer as token release
+
 Transfer
+
 Transfer to
+
 Conditional transfer (internal)
+
 Execute transfer (internal)
-Check balance
-Check allowance
-Approve (delegated transfer)
+
 Tranfer split
+
 Transfer from alias target
-Create a splitter
+
+Check balance
+
+Check allowance
+
+Approve (delegated transfer)
+
+** BURN **
+
 Burn
+
+** QUANTITIES **
+
 Calculate circulating supply
+
 Calculate remaining releasable supply
+
+
 Change address for expenditure destination
+
 Change weight for expenditure destination
+
 Calculate fee
-Change fee manager
+
+Change fee address
+
 Change fee settings
+
+Distribute (and burn) collected fees
+
 Add new alias
+
 Change alias target address
+
 Get creation time for alias
-Add new splitter
-Configure splitter
-Change destination address in existent splitter
+
+Add/create a new splitter
+
+Configure a splitter
+
+Change a destination address in existent splitter
+
 Validate splitter
+
 Check if address is splitter
+
