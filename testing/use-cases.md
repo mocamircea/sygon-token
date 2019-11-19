@@ -7,13 +7,13 @@ UC2 Access fields (generated getters)
 
 UC3 Transfer as token release
 
-Transfer
+UC4 Transfer
 
-Transfer to
+UC5 Transfer to
 
-Conditional transfer (internal)
+UC6 Conditional transfer (internal)
 
-Execute transfer (internal)
+UC7 Execute transfer (internal)
 
 Tranfer split
 
