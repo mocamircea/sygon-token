@@ -32,7 +32,7 @@ contract SYGONtoken {
     bool public bBurnIsActive;
     
     // Fee mechanism
-    bool public bFeeIsActive;
+    //bool public bFeeIsActive;
     address public addrFees; // Collected fees
     uint8 nBurnFromFeeQuota; // Quota to burn from collected fees
     
@@ -171,7 +171,6 @@ contract SYGONtoken {
         bBurnIsActive = true;
         
         // Fee
-        bFeeIsActive = true;
         addrFees = address(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);
         //addrFeeManager = addrCreator;  // Initially the creator, then changed to 
         
@@ -429,7 +428,7 @@ contract SYGONtoken {
     function calculateFee(uint256 nAmount) public view
         returns(uint256 nFee) {
             
-        if (bFeeIsActive){ // todo: needed?
+        //if (bFeeIsActive){ // todo: needed?
             if (nAmount > 0 && nAmount <= feeSettings[0].nAmount) {
                 nFee = (nAmount * feeSettings[0].nFactor)/(uint256(10)**feeSettings[0].nDecimals);
             }else{
@@ -441,10 +440,9 @@ contract SYGONtoken {
                     }
                 }
             }
-        }else {
+        /*}else {
             nFee = 0;
-        }
-        
+        }*/
     }
     
     function changeFeesAddr(address addrNew) public returns (bool bChangeFeesAddrSuccess) {
