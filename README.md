@@ -110,11 +110,10 @@ INPUT<br/>
 
 
 <h3>3 Burn</h3>
-<p> The SYGON token can be burned. <br/>
-The burn operation can only be applied to the released quantity of SYGON tokens. <br/>
-The burn operation is limited to a maximum (TMBQ). <br/>
-The burn operation is restricted for the Creator, so that the total supply is not affectable.<br/>
-</p>
+<p> The SYGON token can be burned by any token holder. However, a fraction of the collected fees are periodicaly burned (see chapter 4 - Fees).</p>
+<p>The burn operation can only be applied to the released quantity of SYGON tokens. </p>
+<p>The burn operation is limited to a maximum (TMBQ). </p>
+<p>The burn operation is restricted for the Creator, so that the total supply is not affectable.</p>
 
 <h3>4 Fees </h3>
   <p>
