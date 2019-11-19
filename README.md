@@ -138,5 +138,7 @@ INPUT<br/>
     </table>
   </p>
   <p>
-  Fees are collected at <i>addrFees</i> and they are periodically distributed - partially to the operator entity (the SynergyCrowds company) and partially burned. The collected fees can be distributed only by using the <i>distributeAndBurnFee</i> function. The proportion to be burned is defined by <i>nBurnFromFeeQuota</i>. This is established through vote, by sygons. 
+  Fees are collected at <i>addrFees</i> and they are periodically distributed - partially to the operator entity (the SynergyCrowds company) and partially burned. The collected fees can be distributed only by using the <i>distributeAndBurnFee</i> function.
+  </p>
+  <p>The proportion to be burned is established through open vote by sygons and stored in <i>nBurnFromFeeQuota</i>. 
   </p>
