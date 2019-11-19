@@ -175,7 +175,7 @@ contract SYGONtoken {
         addrFees = address(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);
         //addrFeeManager = addrCreator;  // Initially the creator, then changed to 
         
-        // 3 Fee intervals
+        // 3 Fee intervals based on transferred amount
         feeSettings[0] = feeSetting(1000000000000000000000,15,4);
         feeSettings[1] = feeSetting(10000000000000000000000,90,4);
         feeSettings[2] = feeSetting(0,5,6);
@@ -214,20 +214,6 @@ contract SYGONtoken {
         require(balances[msg.sender] >= nAmount);
     
         if(conditionalTransfer(msg.sender, addrTo, nAmount)) {
-        /* // If not an alias
-        if(aliases[addrTo] == 0) {
-            if(! isSplitter(addrTo)) { // and not splitter
-                executeTransfer(msg.sender, addrTo, nAmount);  // send "nAmount" to "addrTo"
-            }else{
-                if(splitWeightsValid(addrTo)) {
-                    executeTransfer(msg.sender, addrTo, nAmount);
-                    transferSplit(addrTo, nAmount); 
-                }
-            }
-        }else {  // else, send to alias target
-            executeTransfer(msg.sender, addrAliasTarget, nAmount);
-        }*/
-        
             bTransferSuccess = true;
         }
     }
