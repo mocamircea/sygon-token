@@ -4,7 +4,7 @@ Tokens are released from the <i>balances[addrCreator]</i> by this method exclusi
 
 Tokens can be released until the remaining releasable supply is 0 (<i>balances[addrCreator]</i> is 0).
 
-<b>Transfer restrictions</b>: the amount is strictly positive, not to Creator, not to a splitter, not to release destinations [PRO, OPR, ED3, ED4], not to 0x0, not to <i>addrFees</i>, can not be directly burned.
+<b>Transfer restrictions</b>: the amount is strictly positive, balance of Creator fully covers the entire transfer (to all release destinations), not to Creator, not to a splitter, not to release destinations [PRO, OPR, ED3, ED4], not to 0x0, not to <i>addrFees</i>, can not be burned.
 
 A token release is: the Creator transfers an amount X to a project developer (to address with "DEV" destination) at choice.
 
