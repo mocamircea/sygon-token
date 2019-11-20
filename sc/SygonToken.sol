@@ -20,13 +20,13 @@ contract SYGONtoken {
     
     // Expenditure Destination (for token release)
     
-    struct ExpDest{
+    struct ExpDestSetting{
         uint8 nID;
         address addr;
         uint8 nWeight;
     }
 
-    mapping (string => ExpDest) expDestinations;
+    mapping (string => ExpDestSetting) expDestinations;
     
     // Burn mechanism -- For checking convenience
     bool public bBurnIsActive;
@@ -34,7 +34,7 @@ contract SYGONtoken {
     // Fee mechanism
     //bool public bFeeIsActive;
     address public addrFees; // Collected fees
-    uint8 nBurnFromFeeQuota; // Quota to burn from collected fees
+    uint8 public nBurnFromFeeQuota; // Quota to burn from collected fees
     
     // Implement fee thresholds according to amount intervals
     struct feeSetting {
@@ -55,7 +55,7 @@ contract SYGONtoken {
     
     struct SplitSchema {
         SplitWeight[] destinations;
-        uint40 nExpiry;
+        uint40 nExpiry; // not used 11.19.2019
     }
     
     mapping (address => SplitSchema) splitters;
@@ -63,7 +63,7 @@ contract SYGONtoken {
     
     // Aliases
     mapping (address => uint40) aliases;
-    address addrAliasTarget;
+    address public addrAliasTarget;
     
     
     event ApproveDelegateSpender(address indexed addrSender, address indexed addrDelegateSpender, uint256 nApprovedAmount);
@@ -108,6 +108,10 @@ contract SYGONtoken {
         require (addrRelease != expDestinations["OPR"].addr);
         require (addrRelease != expDestinations["ED3"].addr);
         require (addrRelease != expDestinations["ED4"].addr);
+        
+        require (addrRelease != addrFees);
+        
+        require (addrRelease != addrAliasTarget);
         
         require (addrRelease != address(0x0));
         _;
@@ -160,12 +164,12 @@ contract SYGONtoken {
         // Expenditure Destinations
         
         // Explicit
-        expDestinations["DEV"]=ExpDest(0,address(0x0),100); // Only for coherence with implicit destinations in getters, address is never used
+        expDestinations["DEV"]=ExpDestSetting(0,address(0x0),100); // Only for coherence with implicit destinations in getters, address is never used
         // Implicit
-        expDestinations["PRO"]=ExpDest(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
-        expDestinations["OPR"]=ExpDest(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
-        expDestinations["ED3"]=ExpDest(3,address(0),0); // Reserved for future use
-        expDestinations["ED4"]=ExpDest(4,address(0),0); // Reserved for future use
+        expDestinations["PRO"]=ExpDestSetting(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
+        expDestinations["OPR"]=ExpDestSetting(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
+        expDestinations["ED3"]=ExpDestSetting(3,address(0),0); // Reserved for future use
+        expDestinations["ED4"]=ExpDestSetting(4,address(0),0); // Reserved for future use
         
         // Burn
         bBurnIsActive = true;
