@@ -113,6 +113,8 @@ contract SYGONtoken {
         
         require (addrRelease != addrAliasTarget);
         
+        require (! isSplitter(addrRelease));
+        
         require (addrRelease != address(0x0));
         _;
     }
