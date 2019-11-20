@@ -14,6 +14,8 @@ For any amount transferred to a "DEV" destination, the corresponding amounts for
 
 A fee is applied to each particular transfer, according to the <i>feeSettings</i>.
 
+<i>transferAsTokenRelease</i> returns true if transfers to all release destinations are successfuly completed.
+
 ## Postconditions:
 After the transfer is completed, all balances have the correct amounts: - 1) transferred amounts are calculated based on <i>ExpDestSetting.nWeight</i> for destinations [PRO, OPR, ED3, ED4] and 2) the sum of the amounts credited to the release destinations = the amount debited from Creator.
 
