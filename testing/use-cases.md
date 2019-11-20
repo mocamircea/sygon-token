@@ -1,40 +1,29 @@
 # Use cases
 UC1 Create contract
 
-UC2 Access fields (generated getters)
+UC2 Access state fields (generated getters)
 
-** Transfers **
+### TRANSFERS
 
 UC3 Transfer as token release
 
 UC4 Transfer
 
-UC5 Transfer to
+UC5 Conditional transfer
 
-UC6 Conditional transfer (internal)
+UC6 Execute transfer (internal)
 
-UC7 Execute transfer (internal)
+UC7 Split transfer (internal)
 
-Tranfer split
+UC8 Transfer from alias target
 
-Transfer from alias target
+UC9 Delegated transfer (transferFrom)
 
-Check balance
+UC10 Check balance
 
-Check allowance
+UC11 Approve delegate transfer (Approve)
 
-Approve (delegated transfer)
-
-** BURN **
-
-Burn
-
-** QUANTITIES **
-
-Calculate circulating supply
-
-Calculate remaining releasable supply
-
+UC12 Check allowance
 
 Change address for expenditure destination
 
@@ -63,4 +52,15 @@ Change a destination address in existent splitter
 Validate splitter
 
 Check if address is splitter
+
+
+### BURN
+
+Burn
+
+### QUANTITIES
+
+Calculate circulating supply
+
+Calculate remaining releasable supply
 
