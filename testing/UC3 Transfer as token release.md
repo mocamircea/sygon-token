@@ -8,13 +8,13 @@ A token release is: the Creator transfers an amount X to a project developer (to
 
 For any transferred amount X, the corresponding amounts for all other 4 destinations are automatically computed. Amounts for all release destinations must be successfully transferred.
 
-<i>Transfer</i> event is emitted for each particular transfer (from Creator's balance to the release destinations).
+<i>Transfer</i> and <i>TransferTokenRelease</i> events are emitted for each particular transfer (from Creator to the release destinations).
 
-After the transfer, all balances (Creator + release destinations) have the correct amounts - the sum of the credited amounts for the release destinations = the amount debited from Creator's balance.
+After the transfer is completed, all balances have the correct amounts (the sum of the amounts credited to the release destinations = the amount debited from Creator).
 
-A fee is applied to each transfer from Creator to the release destinations.
+A fee is applied to each particular transfer, according to the <i>feeSettings</i>.
 
-The corresponding amount collected in <i>addrFees</i> is correct (according to the applied rates).
+The total fee collected at <i>addrFees</i> is correct (sum of all applied fees).
 
 
 
