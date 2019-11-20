@@ -11,3 +11,4 @@ Returns true if mutation is successful.
 
 ### Postconditions
 The expenditure destination has the provided address.
+Emit event <i>ChangeEDAddress</i>.
