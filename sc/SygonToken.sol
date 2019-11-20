@@ -190,7 +190,6 @@ contract SYGONtoken {
         addrAliasTarget = address(0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
         
     }
-
     
     function balanceOf(address addrTokenOwner) public view returns(uint256 nOwnerBalance) {
         return balances[addrTokenOwner];
@@ -209,6 +208,7 @@ contract SYGONtoken {
         
         bApproveSuccess = true;
     }
+    
     
     // -----------------
     // TRANSFERS
@@ -257,8 +257,6 @@ contract SYGONtoken {
     function transferAsTokenRelease (address addrTo, uint256 nAmount_DEV, uint32 nProjectID, uint8 nInstallmentID) 
         OnlyCreator ValidReleaseAddress(addrTo) StrictPositive(nAmount_DEV) public returns (bool bTransferTokenReleaseSuccess) {
         
-        bool bRetSuccess = false;
-        
         // Calculate amounts for implicit transfers
         
         uint256 nTotalAmount = nAmount_DEV;
@@ -298,9 +296,7 @@ contract SYGONtoken {
             emit TransferTokenRelease(expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentID);
         }
         
-        bRetSuccess = true;
-        
-        return bRetSuccess;
+        bTransferTokenReleaseSuccess = true;
     }
     
     function transferSplit(address addrFrom, uint256 nAmount) internal {
@@ -314,7 +310,6 @@ contract SYGONtoken {
                     executeTransfer(addrFrom, splitters[addrFrom].destinations[i].addr, (nCalcAmount*splitters[addrFrom].destinations[i].weight)/100);
                 }
             }
-        
     }
     
     function transferFromAliasTarget(address addrTo, uint256 nAmount) public 
@@ -357,41 +352,7 @@ contract SYGONtoken {
 
     
     // -----------------
-    // TOKEN BURN
-    
-    function burn(uint256 nAmountToBurn) public 
-        ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
-        
-        require (balances[msg.sender] >= nAmountToBurn);
-        
-        if (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable) {
-            balances[msg.sender] -= nAmountToBurn;
-            nTotalBurned += nAmountToBurn;
-        
-            emit Burn(msg.sender, nAmountToBurn);
-            bBurnSuccess = true;
-        }else {
-            if(nTotalBurned == nMaxTotalBurnable) {
-                bBurnIsActive = false;
-            }
-        }
-    }
-    
-    // -----------------
-    // CALCULATIONS
-    // 
-    // Supplies and Quantities
-    
-    function getCirculatingSupply() public view returns (uint256 nTotalInCirculation) {
-        return (nInitialTotalSupply - balances[addrCreator]) - nTotalBurned;
-    }
-    
-    function getRemainingReleasableSupply() public view returns (uint256 nTotalRemainingReleasable) {
-        return balances[addrCreator];
-    }
-    
-    // -----------------
-    // EXPENDITURE DESTINATIONS
+    // TOKEN RELEASE - EXPENDITURE DESTINATIONS
     
     // Access fields
 
@@ -427,6 +388,7 @@ contract SYGONtoken {
         
         emit ChangeEDWeight(sEDName, nNewWeight);
     }
+    
     
     // -----------------
     // FEE
@@ -491,6 +453,7 @@ contract SYGONtoken {
         }
     }
     
+    
     // -----------------
     // ALIASES
     
@@ -520,6 +483,7 @@ contract SYGONtoken {
     function getForAlias(address addr) public view returns (uint40 tmstp) {
         return aliases[addr];
     }
+
 
     // -----------------
     // SPLITTERS
@@ -589,4 +553,41 @@ contract SYGONtoken {
     function isSplitter(address addr) public view returns (bool bAddrIsSplitter) {
         return splitters[addr].nExpiry != 0;
     }
+    
+    
+    // -----------------
+    // TOKEN BURN
+    
+    function burn(uint256 nAmountToBurn) public 
+        ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
+        
+        require (balances[msg.sender] >= nAmountToBurn);
+        
+        if (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable) {
+            balances[msg.sender] -= nAmountToBurn;
+            nTotalBurned += nAmountToBurn;
+        
+            emit Burn(msg.sender, nAmountToBurn);
+            bBurnSuccess = true;
+        }else {
+            if(nTotalBurned == nMaxTotalBurnable) {
+                bBurnIsActive = false;
+            }
+        }
+    }
+    
+    
+    // -----------------
+    // CALCULATIONS
+    // 
+    // Supplies and Quantities
+    
+    function getCirculatingSupply() public view returns (uint256 nTotalInCirculation) {
+        return (nInitialTotalSupply - balances[addrCreator]) - nTotalBurned;
+    }
+    
+    function getRemainingReleasableSupply() public view returns (uint256 nTotalRemainingReleasable) {
+        return balances[addrCreator];
+    }
+    
 }
