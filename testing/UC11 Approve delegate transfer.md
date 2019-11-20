@@ -1,6 +1,6 @@
 # UC11 Approve delegated transfer
 
-This allows a user to add an address to transfer amounts from his balance. The allowance is limited to the current balance of the sender.
+<i>approve</i> allows the sender to add an address to transfer amounts from its balance. The allowance is limited as maximum to the current balance of the sender.
 
 ## Preconditions
 The sender is not the Creator, the allowed address is not Creator, the sender is different from allowed address.
