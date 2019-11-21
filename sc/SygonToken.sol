@@ -38,7 +38,7 @@ contract SYGONtoken {
     
     // Implement fee thresholds according to amount intervals
     struct feeSetting {
-        uint256 nAmount;
+        uint256 nRangeCeiling;
         uint256 nFactor;
         uint256 nDecimals;
     }
@@ -395,13 +395,13 @@ contract SYGONtoken {
         StrictPositive(nAmount) returns(uint256 nFee) {
             
         //if (bFeeIsActive){ // todo: needed?
-            if (nAmount <= feeSettings[0].nAmount) {
+            if (nAmount <= feeSettings[0].nRangeCeiling) {
                 nFee = (nAmount * feeSettings[0].nFactor)/(uint256(10)**feeSettings[0].nDecimals);
             }else{
-                if (nAmount > feeSettings[0].nAmount && nAmount <= feeSettings[1].nAmount) {
+                if (nAmount > feeSettings[0].nRangeCeiling && nAmount <= feeSettings[1].nRangeCeiling) {
                     nFee = (nAmount * feeSettings[1].nFactor)/(uint256(10)**feeSettings[1].nDecimals);
                 }else{
-                    if (nAmount > feeSettings[1].nAmount) {
+                    if (nAmount > feeSettings[1].nRangeCeiling) {
                         nFee = (nAmount * feeSettings[2].nFactor)/(uint256(10)**feeSettings[2].nDecimals);
                     }
                 }
@@ -419,11 +419,13 @@ contract SYGONtoken {
         bChangeFeesAddrSuccess = true;
     }
     
-    function changeFeeSetting(uint8 nFeeID, uint256 nNewAmount, uint8 nNewFactor, uint8 nNewDecimals) public returns (bool bChangeFeeSuccess) {
+    function changeFeeSetting(uint8 nFeeID, uint256 nCeiling, uint8 nNewFactor, uint8 nNewDecimals) public 
+        StrictPositive(nCeiling) returns (bool bChangeFeeSuccess) {
+        
         require(msg.sender == addrFees);
         require(nFeeID>=0 && nFeeID<=2);
-        require(nNewAmount > 0 && nNewAmount < getCirculatingSupply());
-        feeSettings[nFeeID].nAmount = nNewAmount;
+        require(nCeiling < getCirculatingSupply());
+        feeSettings[nFeeID].nRangeCeiling = nCeiling;
         feeSettings[nFeeID].nFactor = nNewFactor;
         feeSettings[nFeeID].nDecimals = nNewDecimals;
         
