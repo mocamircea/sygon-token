@@ -8,7 +8,9 @@ The sender is not the Creator, the allowed address is not Creator, the sender is
 ## Steps
 A new entry for the sender with allowance for the address and the specified amount is added.
 
-## Postconditions
-Event <i>ApproveDelegateSpender</i> is emitted.
+Emit <i>ApproveDelegateSpender</i>.
 
+## Postconditions
 The allowance for the allowed address is updated with the new amount.
+
+Returns true if approval is successfuly performed.
