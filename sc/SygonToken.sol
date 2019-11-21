@@ -352,9 +352,9 @@ contract SYGONtoken {
 
     
     // -----------------
-    // TOKEN RELEASE - EXPENDITURE DESTINATIONS
+    // (FOR TOKEN RELEASE) - EXPENDITURE DESTINATIONS
     
-    // Access fields
+    // Access details of expenditure destinations
 
     function getAddressForExpDest(string sEDName) public view returns (address addrExpDestAddress) {
         return expDestinations[sEDName].addr;
@@ -375,18 +375,16 @@ contract SYGONtoken {
         OnlyCreator NotCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
         
         expDestinations[sEDName].addr = addrNew;
-        bChangeEDAddressSuccess = true;
-        
         emit ChangeEDAddress(sEDName, addrNew);
+        bChangeEDAddressSuccess = true;
     }
     
     function setWeightForExpDest(string sEDName, uint8 nNewWeight) public
         OnlyCreator StrictPositive(nNewWeight) OnlyImplicitDestination(sEDName) returns (bool bChangeEDWeightSuccess) {
         
         expDestinations[sEDName].nID = nNewWeight;
-        bChangeEDWeightSuccess = true;
-        
         emit ChangeEDWeight(sEDName, nNewWeight);
+        bChangeEDWeightSuccess = true;
     }
     
     
@@ -394,10 +392,10 @@ contract SYGONtoken {
     // FEE
     
     function calculateFee(uint256 nAmount) public view
-        returns(uint256 nFee) {
+        StrictPositive(nAmount) returns(uint256 nFee) {
             
         //if (bFeeIsActive){ // todo: needed?
-            if (nAmount > 0 && nAmount <= feeSettings[0].nAmount) {
+            if (nAmount <= feeSettings[0].nAmount) {
                 nFee = (nAmount * feeSettings[0].nFactor)/(uint256(10)**feeSettings[0].nDecimals);
             }else{
                 if (nAmount > feeSettings[0].nAmount && nAmount <= feeSettings[1].nAmount) {
