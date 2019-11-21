@@ -465,7 +465,7 @@ contract SYGONtoken {
         require(msg.sender != addrAliasTarget);
         aliases[msg.sender]=uint40(block.timestamp);
         
-        return true;
+        bAddAliasSuccess = true;
     }
     
     // Change alias target
@@ -475,7 +475,7 @@ contract SYGONtoken {
         
         addrAliasTarget = addrNewTarget;
         
-        return true;
+        bChangeAliasTargetSuccess = true;
     }
     
     // Get alias creation timestamp
@@ -490,14 +490,14 @@ contract SYGONtoken {
     
     // Add new splitter
     
-    function addSplitter(address addrDest1, uint8 w1, address addrDest2) public returns (bool bAddSplitterSuccess) {
-        require(msg.sender != addrDest1);
-        require(msg.sender != addrDest2);
-        require(addrDest1 != addrDest2);
+    function addSplitter(address addrPrim, uint8 w1, address addrSec) public returns (bool bAddSplitterSuccess) {
+        require(msg.sender != addrPrim);
+        require(msg.sender != addrSec);
+        require(addrPrim != addrSec);
         require(w1>0 && w1<=100);
         
-        splitters[msg.sender].destinations.push(SplitWeight(addrDest1,w1));
-        splitters[msg.sender].destinations.push(SplitWeight(addrDest2,100-w1));
+        splitters[msg.sender].destinations.push(SplitWeight(addrPrim,w1));
+        splitters[msg.sender].destinations.push(SplitWeight(addrSec,100-w1));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
@@ -505,7 +505,7 @@ contract SYGONtoken {
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].nExpiry = 1;
         
-        return true;
+        bAddSplitterSuccess = true;
     }
     
     // Configure a splitter
@@ -553,28 +553,7 @@ contract SYGONtoken {
     function isSplitter(address addr) public view returns (bool bAddrIsSplitter) {
         return splitters[addr].nExpiry != 0;
     }
-    
-    
-    // -----------------
-    // TOKEN BURN
-    
-    function burn(uint256 nAmountToBurn) public 
-        ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
-        
-        require (balances[msg.sender] >= nAmountToBurn);
-        
-        if (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable) {
-            balances[msg.sender] -= nAmountToBurn;
-            nTotalBurned += nAmountToBurn;
-        
-            emit Burn(msg.sender, nAmountToBurn);
-            bBurnSuccess = true;
-        }else {
-            if(nTotalBurned == nMaxTotalBurnable) {
-                bBurnIsActive = false;
-            }
-        }
-    }
+
     
     
     // -----------------
@@ -589,5 +568,27 @@ contract SYGONtoken {
     function getRemainingReleasableSupply() public view returns (uint256 nTotalRemainingReleasable) {
         return balances[addrCreator];
     }
+        
     
+    // -----------------
+    // TOKEN BURN
+    
+    function burn(uint256 nAmountToBurn) public 
+        ForbidCreator BurnIsActive returns (bool bBurnSuccess) {
+        
+        require (balances[msg.sender] >= nAmountToBurn);
+        
+        if (nAmountToBurn + nTotalBurned <= nMaxTotalBurnable) {
+            balances[msg.sender] -= nAmountToBurn;
+            nTotalBurned += nAmountToBurn;
+        
+            emit Burn(msg.sender, nAmountToBurn);
+            
+            if(nTotalBurned == nMaxTotalBurnable) {
+                bBurnIsActive = false;
+            }
+            
+            bBurnSuccess = true;
+        }
+    }
 }
