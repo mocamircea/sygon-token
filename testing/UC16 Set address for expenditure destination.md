@@ -1,5 +1,5 @@
 # UC16 Set address for expenditure destination
-## <i>setAddressForExpDest</i>
+<i>setAddressForExpDest</i>
 
 ### Preconditions
 Setting an address of expenditure destination is performed exclusively by the Creator, 
