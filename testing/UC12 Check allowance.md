@@ -1,4 +1,12 @@
 # UC12 Check allowance
+<i>getAllowanceForDelegateSpender</i>
 
-The <i>getAllowanceForDelegateSpender</i> function returns the amount allowed from a specified owner and provided address delegate spender.
+Verify the amount that a delegated spender can spend from a given owner.
+
+### Preconditions
+
+### Steps
+
+### Postconditions
+Returns the amount allowed from a specified owner.
 
