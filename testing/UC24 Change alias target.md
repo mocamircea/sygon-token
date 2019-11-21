@@ -1,4 +1,4 @@
-# UC24 UC24 Change alias target
+# UC24 Change alias target
 Change the address for alias target.
 
 ### Preconditions
