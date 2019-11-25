@@ -1,5 +1,5 @@
 # UC15 Get weight for expenditure destination
-<i>getWeightForExpDest</i>
+## <i>getWeightForExpDest</i>
 
 ### Preconditions
 ### Steps
