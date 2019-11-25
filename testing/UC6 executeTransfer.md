@@ -1,11 +1,13 @@
 # UC6 executeTransfer (internal)
+## <i>executeTransfer</i>
 
-## Preconditions
+### Preconditions
+None, assessed by callers.
 
-## Steps
+### Steps
 Calculate fee by delegating to <i>calculateFee</i>.
 
-Calculate net amount.
+Calculate net amount for the transfer.
 
 Update balances of sender and recipient with net amount.
 
@@ -15,6 +17,6 @@ If calculated fee is > 0 then update balances of sender and <i>addrFees</i> with
 
 Emit <i>Transfer</i>.
 
-## Postconditions
-All balances of sender, receiver and eventually <i>addrFees</i> are updated.
+### Postconditions
+All balances of sender, receiver and eventually <i>addrFees</i> are updated with the transferred amounts.
 
