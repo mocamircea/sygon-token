@@ -5,7 +5,7 @@ Tokens are released from the <i>balances[addrCreator]</i> by Creator, exclusivel
 
 In a token release transfer, the Creator transfers an amount <i>nAmount</i> to a contributor (to address with "DEV" destination).
 
-## Preconditions:
+## Preconditions
 The remaining releasable supply covers the cumulated amounts to be transferred to all release destinations.
 
 <b>Transfer restrictions</b>: the amount is strictly positive, balance of Creator fully covers the entire amount (for all release destinations), can not transfer to Creator, can not transfer to a splitter, address required in the transfer can not be release destinations [PRO, OPR, ED3, ED4], can not trasfer to 0x0, can not trasfer to <i>addrFees</i>, the amount can not be burned.
@@ -15,7 +15,7 @@ For any amount transferred to a DEV destination, the corresponding amounts for a
 
 A fee is applied and collected at <i>addrFees</i> from each particular transfer, according to the <i>feeSettings</i>.
 
-## Postconditions:
+## Postconditions
 After the transfer is completed, all balances have the correct amounts: - 1) transferred amounts are calculated based on <i>ExpDestSetting.nWeight</i> for destinations [PRO, OPR, ED3, ED4] and 2) the sum of the amounts credited to the release destinations = the amount debited from Creator's balance.
 
 The total fee collected at <i>addrFees</i> is correct - sum of all applied fees.
