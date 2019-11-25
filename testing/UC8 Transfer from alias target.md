@@ -1,5 +1,5 @@
 # Transfer from alias target
-##<i>transferFromAliasTarget</i>
+## <i>transferFromAliasTarget</i>
 
 The alias target address receives all amounts transferred to aliases. This amount is further distributed to the contributors of the SYGON technology. Contributors are registered as split destinations in splitters (at entries 1-6).
 
