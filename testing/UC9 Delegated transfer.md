@@ -16,6 +16,6 @@ the allowance for the sender is reduced with the
 tranferred amount.
 
 ### Postconditions
-The balance of: the source of transfer, the recipient and <i>addrFees</i> and allowance for sender are updated accordingly.
+The balances of: the source of transfer, the recipient and <i>addrFees</i> and allowance for sender are updated accordingly.
 
 Returns true if the transfer is successfuly completed.
