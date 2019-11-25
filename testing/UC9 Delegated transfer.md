@@ -1,5 +1,5 @@
 # UC9 Delegated transfer
-##<i>transferFrom</i>
+## <i>transferFrom</i>
 
 ### Preconditions
 The transfer can not be performed by the Creator or from Creator's balance, 
