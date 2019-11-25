@@ -1,5 +1,5 @@
 # UC14 Get ID of expenditure destination
-<i>getIDForExpDest</i>
+## <i>getIDForExpDest</i>
 
 ### Preconditions
 ### Steps
