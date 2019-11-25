@@ -1,9 +1,11 @@
 # UC10 Check balance
-User checks the balance of a given address.
+## <i>balanceOf</i>
 
-## Preconditions
+The user checks the balance of a given address.
 
-## Steps
+### Preconditions
 
-## Postconditions
+### Steps
+
+### Postconditions
 Returns from <i>balances</i> the amount associated to the provided address.
