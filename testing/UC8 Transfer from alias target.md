@@ -1,7 +1,7 @@
 # Transfer from alias target
 ## <i>transferFromAliasTarget</i>
 
-The alias target address receives all amounts transferred to aliases. This amount is further distributed to the contributors of the SYGON technology. Contributors are registered as split destinations in splitters (at entries 1-6).
+The alias target address receives all amounts transferred to aliases. This amount is further distributed to the contributors of the SYGON technology. Contributors are registered as split destinations in splitters.
 
 ### Preconditions
 Restrictions: the transferred amount is strictly positive, the transfer can be performed only by the owner of the <i>addrAliasTarget</i> address or a delegated user,
