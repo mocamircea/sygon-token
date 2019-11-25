@@ -1,6 +1,6 @@
 # UC2 Access fields
 
-Access fields with auto generated accessors for:
+Access fields with automatically generated accessors for contract fields:
 
 - addrCreator
 
@@ -25,4 +25,4 @@ Access fields with auto generated accessors for:
 - addrAliasTarget
 
 
---- check if getter is present and confront value with init from c-tor
+Verify if getter is generated and check value against value specified in constructor.
