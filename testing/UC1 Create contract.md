@@ -1,10 +1,14 @@
 # UC1 Create contract
+The Creator instantiates the token.
 
-Preconditions:
+### Preconditions:
 
-Set addresses for:
+Initialize state:
 
-expDestinations["PRO"]
-expDestinations["OPR"]
-addrFees
-addrAliasTarget
+* expDestinations["PRO"]
+* expDestinations["OPR"]
+* addrFees
+* addrAliasTarget
+
+### Postconditions
+The contract is successfully created, with state correctly initialized.
