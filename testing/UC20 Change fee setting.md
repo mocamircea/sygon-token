@@ -1,10 +1,12 @@
 # UC20 Change fee setting
-Change the fields (range ceiling and the factor - with its decimals) for one of the three existent fee settings.
+## <i>changeFeeSetting</i>
 
-A particular fee setting is identified with its ID (field <i>nFeeID</i>). Allowed IDs: 0, 1, 2;
+The fee owner modifies the values of the fields (like ceiling and factor and decimals) for one of the three existent fee settings.
+
+A particular fee setting is identified with its ID (field <i>nFeeID</i>). Allowed IDs are: 0, 1, 2;
 
 ### Preconditions
-Restrictions: only the owner of <i>addrFees</i> can change fee settings, the setting id value is in {0,1,2}, 
+Restrictions: only the owner of <i>addrFees</i> can change the fields of fee settings, the setting ID value is in {0,1,2}, 
 the range ceiling is strictly positive and striclty smaller than the circulating supply.
 
 ### Steps
