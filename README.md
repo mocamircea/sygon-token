@@ -64,7 +64,7 @@ INPUT<br/>
   <h4>Expenditure Destinations</h4>
    There are five possible expenditure destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights and the amount transferred to DEV. 
    
-   All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, and consequently, a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively.
+   <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, and consequently, a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively.
    <br/><br/> Also, there are destinations [3] ED3 and [4] ED4, with an initial weight of 0 (zero). These two destinations are reserved for future implementations.
    <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed to Creator. Changing destinations emits specific events.
    <br/><br/> <b>Reading Destinations</b> Details of any destination can be accessed through a valid name ("DEV", "PRO", "OPR", "ED3", "ED4"). The following attributes can be accessed: destination ID, address and weight.
