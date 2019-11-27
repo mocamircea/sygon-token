@@ -14,12 +14,12 @@
 </p>
 <hr/>
 <p>
-The SYGON token implements the SynergyCrowds business model, with specific mechanisms for monetizing the contribution of sygons to producing knowledge in a decentralzied approach.
+The SYGON token implements the business model adopted by SynergyCrowds, with specific mechanisms for monetizing the contribution of sygons to producing knowledge in a decentralzied fashion.
 </p>
 
 <p>
   <b>Actors</b><br/><br/>
-There are three types of actor that interact with the token: 1) the Creator, 2) the Initial Contributors and 3) Others. The Creator releases SYGON tokens (with a dedicated method) to the Initial Contributors for their contribution to developing the SYGON technology. Others are any other users, holding and transferring tokens for any purpose.
+There are three types of actor that interact with the token: 1) the Creator, 2) the Initial Contributors and 3) Others. The <i>Creator</i> releases SYGON tokens (with a dedicated method) to the <i>Initial Contributors</i> for their contribution to developing the SYGON technology. <i>Others</i> are any other users, holding and transferring tokens for any purpose.
 </p>
 
 <br/>
@@ -30,16 +30,17 @@ There are three types of actor that interact with the token: 1) the Creator, 2) 
 
 <h3>1.1 <i>transfer</i> and <i>transferFrom</i></h3>
 <p>
-  As of ERC20, methods are used by any human or machine users that hold SYGON tokens.<br/>
-  The function checks if the transfer targets <b>alias</b> or <b>splitter</b>, performing the transfer accordingly.
+  As of ERC20, methods are used by any human or machine users to transfer SYGON tokens.<br/>
+  The function checks if the the amount is transferred to an <b>alias</b> or a <b>splitter</b>, performing the transfer accordingly.
 <br/><br/>
   <b>Aliases</b><br/>
-  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amount sent to an alias address is directed automatically to a unique address (defined by <i>addrAliasTarget</i>). Aliases are created by the operational entity (SynergyCrowds company) for users. The alias is found under the name of <i>Feed address</i> in the SynergyCrowds platform, being allocated to accounts when upgraded to Level 2.
+  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amount transferred to an alias address is directed automatically to a unique address (defined by <i>addrAliasTarget</i>). <br/><br/>
+  More specifically, aliases are created by the operational entity (SynergyCrowds company) for all users of the SYGON technology products. The concept of alias can be found under the name of <i>Feed address</i> in the SynergyCrowds platform. This is a unique address that is allocated to any account when successfully upgrading to Level 2.
 </p>
 
   <h3>1.2 <i>transferAsTokenRelease</i></h3>
   <p>
-The SYGON token is put into circulation with this method, by the Creator. This special method of transfer is meant to  release amounts of SYGON tokens directly to Initial Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes but only to reward real contribution to building the SYGON technology and its products. However, Initial Contributors will further put tokens on the market. So Others will be able to purchase tokens from the market.
+The SYGON token is put into circulation with this method, by the Creator only. This special method of transfer is meant to  release amounts of SYGON tokens directly to Initial Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products. However, Initial Contributors will be able to further put tokens on the market by selling them to any other interested parties.
   
 INPUT<br/>
   <ul>
@@ -61,7 +62,8 @@ INPUT<br/>
     </li>
   </ul>
   <h4>Expenditure Destinations</h4>
-   There are five possible expenditure destinations and three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV is explicit, the rest of the destinations are implicit. This means that a particular amount to be released defaultly targets the DEV destination. Consequently, amounts for PRO and OPR are calculated automatically based on their weights and the amount transferred for DEV. 
+   There are five possible expenditure destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights and the amount transferred to DEV. 
+   
    <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a strtucture like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, and consequently, a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR.
    <br/><br/> Also, there are destinations [3] ED3 and [4] ED4, with an initial weight of 0 (zero). These two destinations are reserved for future implementations.
    <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed for the Creator. Changing destinations emits specific events.
@@ -118,10 +120,10 @@ INPUT<br/>
 
 
 <h2>3 Burn</h2>
-<p> The SYGON token can be burned by any token holder. However, a fraction of the collected fees are periodicaly burned (see chapter 4 - Fees).</p>
+<p>SYGON tokens can be burned by any token holder, from their balances. Also, a fraction of the collected fees are periodicaly burned (see chapter 4 - Fees).</p>
 <p>The burn operation can only be applied to the released quantity of SYGON tokens. </p>
-<p>The burn operation is limited to a maximum (TMBQ). </p>
-<p>The burn operation is restricted for the Creator, so that the total supply is not affectable.</p>
+<p>The burn operation is limited to a maximum quantity (TMBQ). </p>
+<p>The burn operation is forbidden for the Creator, so that the total supply is not affectable by this operation.</p>
 
 <h2>4 Fees </h2>
   <p>
