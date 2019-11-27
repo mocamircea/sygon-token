@@ -91,7 +91,10 @@ INPUT<br/>
   
   <b>Splitters</b><br/>
   A splitter associates an address with a split schema. A split schema defines a set of transfer destinations with weights. This mechanism allows at least two contributors to receive rewards for their contributions.<br/><br/>
-  The contributor that creates the splitter is called primary and the second one is called secondary contributor. The secondary contributor can furhter configure the splitter by managing other 5 contributors at choice. <br/><br/>
+  The contributor that creates the splitter is called <i>Primary</i> and the second one is called <i>Secondary</i> contributor. The secondary contributor can furhter configure the splitter by managing other 5 contributors at choice. <br/><br/>
+  
+  <img src="SYGON-token-split-transfer-splitter.png"/> <br/>
+  
   Splitters are generally used for automatically sharing the monetization of products among their contributors. <br/><br/>
   
   Any amount of tokens sent to a splitter is automatically distributed among the destinations defined in the split schema.<br/></br>
