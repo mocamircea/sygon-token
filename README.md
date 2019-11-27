@@ -40,7 +40,7 @@ There are three types of actor that interact with the token: 1) the Creator, 2) 
 
   <h3>1.2 <i>transferAsTokenRelease</i></h3>
   <p>
-The SYGON token is put into circulation with this method, by the Creator only. This special method of transfer is meant to  release amounts of SYGON tokens directly to Initial Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products. However, Initial Contributors will be able to further put tokens on the market by selling them to any other interested parties.
+The SYGON token is put into circulation with this method, by the Creator only. This special method of transfer is meant to  release amounts of SYGON tokens directly to Initial Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products. Further, the Initial Contributors will be able to further put tokens on the market by selling them to any other interested parties.
   
 INPUT<br/>
   <ul>
@@ -62,6 +62,7 @@ INPUT<br/>
     </li>
   </ul>
   <h4>Expenditure Destinations</h4>
+  <img src="SYGON-token-transfer-as-token-release.png"/> <br/>
    There are five possible expenditure destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights and the amount transferred to DEV. 
    
    <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, and consequently, a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively.
