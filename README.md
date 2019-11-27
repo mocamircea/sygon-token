@@ -116,7 +116,7 @@ INPUT<br/>
   
   <h3>1.4 <i>transferFromAliasTarget</i></h3>
   <p>
-    This is a special method of token transfer ensuring that all amounts received to addrAliasTarget are transferred to splitters only. No other destination is possible. This mechanism guarantees to the contributors that all monetization of the delivered knowledge is distributed among them and it is verifiable.<br/>
+    This is a special method of token transfer ensuring that all amounts received at <i>addrAliasTarget</i> are transferred to splitters only. No other destination is possible. This mechanism guarantees to the contributors that the entire monetization of the delivered knowledge is distributed among them and this process is fully verifiable.<br/>
   Transfers from <i>addrAliasTarget</i> can be performed either directly or delegated.
   </p>
 <h2>2 Fractionable</h2>
