@@ -157,3 +157,7 @@ INPUT<br/>
   </p>
   <p>The proportion of token burn from the collected fees is established through open vote by sygons and stored in <i>nBurnFromFeeQuota</i>. 
   </p>
+
+<h2>5 SYGON Token Economy</h2>
+<p>The overview of the SYGON token economy.</p><br/>
+<img src="SYGON-token-economy-overview.png"/>
