@@ -1,11 +1,13 @@
 # UC24 Change alias target
-Change the address for alias target.
+## <i>changeAliasTarget</i>
+
+The Alias Manager changes the address of alias target.
 
 ### Preconditions
-Restrictions: only the creator can change the alias target address, new address can not be Creator's, new address can not be alias, new address can not be release address.
+Restrictions: only the creator can change the alias target address, the provided address: can not be Creator's, can not be an alias, can not be any of the defined expenditure destinations.
 
 ### Steps
-Assign new address to <i>addrAliasTarget</i>.
+Assign the provided address to <i>addrAliasTarget</i>.
 
 ### Postconditions
-Returns true if operation is successfully completed.
+Returns true if assigning the provided address to <i>addrAliasTarget</i> is successfully completed.
