@@ -1,16 +1,89 @@
 # SYGON token
 
 <p>
-<b>Name:</b> SYGON <br/>
-<b>Symbol:</b> SYGON <br/>
-<b>Type:</b> ERC20<br/>
-<b>Decimals:</b> 18 <br/>
-<b>Total Initial Supply (TIS):</b> fixed, 7500000000. This is the maximum amount that can be released ever.<br/>
-<b>Total Released Quantity (TRQ):</b> total amount ever released from TIS.<br/>
-<b>Total Maximum Burnable Quantity (TMBQ):</b> fixed, 6750000000 (representing 90% of the total initial supply). <br/>
-<b>Total Burned Quantity (TBQ):</b> total amount of tokens burned so far. Burn applies to TRQ only.<br/>
-<b>Total Circulating Supply (TCS):</b> total token supply that was released and was not burned yet. TCS=TRQ-TBQ <br/>
-  <b>Total Remaining Supply to be Released (TRSR):</b> total remaining token supply that can still be distributed from initial supply. TRSR=TIS-TRQ<br/>
+  <table>
+    <tr>
+      <td>
+        <b>Name</b>
+      </td>
+      <td>
+        SYGON
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Symbol</b>
+      </td>
+      <td>
+        SYGON
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Type</b>
+      </td>
+      <td>
+        ERC20
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Decimals</b>
+      </td>
+      <td>
+        18
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Total Initial Supply (TIS)</b>
+      </td>
+      <td>
+         Fixed, 7500000000. This is the maximum amount that can be released ever.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Total Released Quantity (TRQ)</b>
+      </td>
+      <td>
+        Total amount ever released from TIS.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Total Maximum Burnable Quantity (TMBQ)</b>
+      </td>
+      <td>
+        Fixed, 6750000000 (representing 90% of the total initial supply).
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Total Burned Quantity (TBQ)</b>
+      </td>
+      <td>
+        Total amount of tokens burned so far. Burn applies to TRQ only.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Total Circulating Supply (TCS)</b>
+      </td>
+      <td>
+        Total token supply that was released and was not burned yet. TCS=TRQ-TBQ
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Total Remaining Supply to be Released (TRSR)</b>
+      </td>
+      <td>
+        Total remaining token supply that can still be distributed from initial supply. TRSR=TIS-TRQ
+      </td>
+    </tr>
+  </table>
+
 </p>
 <hr/>
 <p>
