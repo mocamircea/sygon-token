@@ -1,13 +1,15 @@
 # UC21 Change burn from fee quota
-Change the quota of tokens that can be burned from collected fees.
+## <i>changeBurnFromFeeQuota</i>
+
+Change the quota of burn from the total collected fees.
 
 ### Preconditions
-Restrictions: only the owner of <i>addrFees</i> can change the quota, the quota is in [20,100] range.
+Restrictions: only the owner of <i>addrFees</i> can change the value of quota, the quota is in [20,100] range.
 
 ### Steps
-Assign new quota value.
+Assign the provided value for quota.
 
 Emit <i>ChangeBurnFromFeeQuota</i>.
 
 ### Postconditions
-Returns true if the change operation is successfuly completed.
+Returns true if assigning the new value for quota is successfuly completed.
