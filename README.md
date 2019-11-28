@@ -19,7 +19,24 @@ The SYGON token implements the business model adopted by SynergyCrowds, with spe
 
 <p>
   <b>Actors</b><br/><br/>
-There are three types of actor that interact with the token: 1) the Creator, 2) the Initial Contributors and 3) Others. The <i>Creator</i> releases SYGON tokens (with a dedicated method) to the <i>Initial Contributors</i> for their contribution to developing the SYGON technology. <i>Others</i> are any other users, holding and transferring tokens for any purpose.
+There are five types of actor that interact with the SYGON token:
+  <ol>
+    <li>
+      <b>Creator</b> releases SYGON tokens (with a dedicated method) to the <i>Initial Contributors</i> for their contribution to developing the SYGON technology.
+    </li>
+    <li>
+      <b>Initial Contributor</b> directly contribute to the development of the SYGON technology generally by working on different tasks of specific development projects.
+    </li>
+    <li>
+      <b>Alias Target Manager</b> manages the target address of aliases and owns <i>addrAliasTarget</i>.
+    </li>
+    <li>
+      <b>Fee Manager</b> manages the settings of the fee mechanism and the address collects fees applied to token transfers. The Fee Manager is a played by a decentralized mechanism that allows all sygons to decide on the fee policy based on algorithmic meritocracy. The Fee Manager owns <i>addrFees</i>.
+    </li>
+    <li>
+      <b>Other</b> is any other users, holding and transferring tokens for any purpose.
+    </li>
+  </ol>
 </p>
 
 <br/>
