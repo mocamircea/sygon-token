@@ -1,14 +1,16 @@
 # UC22 Distribute and burn fee
-The objective is to distribute the fees collected at <i>addrFees</i> by transferring a fraction to 
-the operating entity and burning the rest.
+## <i>distributeAndBurnFee</i>
+
+The fee manager periodically distributes the fees collected at <i>addrFees</i> by burning a quota and transferring the rest to 
+the operational entity. The value of quota is held by <i>nBurnFromFeeQuota</i>.
 
 ### Preconditions
-Restrictions: only the owner of <i>addrFees</i> can distribute and burn fees. Collected fees >= 100.
+Restrictions: only the Fee Manager can distribute and burn fees, the amount of collected fees exceed 100.
 
 ### Steps
-Calculate the amount to burn. Burn the amount.
+Calculate the amount to burn. Burn the respective amount.
 
-Transfer the reminder to "OPR" expenditure destination.
+Transfer the reminder amount to "OPR" expenditure destination by delegating to <i>conditionalTransfer</i>.
 
 ### Postconditions
 Returns true if the transfer and burn are completed successfully.
