@@ -104,7 +104,7 @@ There are five types of actor that interact with the SYGON token:
       <b>Alias Target Manager</b> manages the target address of aliases and owns <i>addrAliasTarget</i>.
     </li>
     <li>
-      <b>Fee Manager</b> manages the settings of the fee mechanism and the address collects fees applied to token transfers. The Fee Manager is a played by a decentralized mechanism that allows all sygons to decide on the fee policy based on algorithmic meritocracy. The Fee Manager owns <i>addrFees</i>.
+      <b>Fee Manager</b> manages the settings of the fee mechanism and the address collects fees applied to token transfers. The Fee Manager is a role played by a decentralized mechanism that allows all sygons to decide on the fee policy based on algorithmic meritocracy. The Fee Manager owns <i>addrFees</i>.
     </li>
     <li>
       <b>Other</b> is played by any other users, holding and transferring tokens for any purpose.
