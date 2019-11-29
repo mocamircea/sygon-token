@@ -251,3 +251,28 @@ INPUT<br/>
 <h2>5 SYGON Token Economy</h2>
 <p>The overview of the SYGON token economy.</p><br/>
 <img src="SYGON-token-economy-overview.png"/>
+
+<h3>Roles and responsibilities</h3>
+<table>
+  <tr>
+    <td><b>Actor & account</b></td> <td><b>Entity & owner</b></td>
+  </tr>
+  <tr>
+    <td>Creator</td> <td> </td>
+  </tr>
+  <tr>
+    <td>OPR expenditure destination</td> <td>Operational entity</td>
+  </tr>
+  <tr>
+    <td>PRO expenditure destination</td> <td>Operational entity</td>
+  </tr>
+  <tr>
+    <td>Fee Manager</td> <td>Software - decentralized mechanism controlled by all sygons</td>
+  </tr>
+  <tr>
+    <td>Alias Target Manager</td> <td>Operational entity</td>
+  </tr>
+  <tr>
+    <td>Other</td> <td>Any user holding and transferring SYGON tokens</td>
+  </tr>
+</table>
