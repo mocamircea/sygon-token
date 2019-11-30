@@ -255,16 +255,10 @@ INPUT<br/>
 <h3>Roles and responsibilities</h3>
 <table>
   <tr>
-    <td><b>Actor & account</b></td> <td><b>Entity & owner</b></td>
+    <td><b>Actor</b></td> <td><b>Entity</b></td>
   </tr>
   <tr>
     <td>Creator</td> <td> </td>
-  </tr>
-  <tr>
-    <td>OPR expenditure destination</td> <td>Operational entity</td>
-  </tr>
-  <tr>
-    <td>PRO expenditure destination</td> <td>Operational entity</td>
   </tr>
   <tr>
     <td>Fee Manager</td> <td>Software - decentralized mechanism controlled by all sygons</td>
@@ -274,5 +268,17 @@ INPUT<br/>
   </tr>
   <tr>
     <td>Other</td> <td>Any user holding and transferring SYGON tokens</td>
+  </tr>
+</table> <br/>
+
+<table>
+  <tr>
+    <td><b>Account</b></td> <td><b>Owner</b></td>
+  </tr>
+  <tr>
+    <td>OPR expenditure destination</td> <td>Operational entity</td>
+  </tr>
+  <tr>
+    <td>PRO expenditure destination</td> <td>Operational entity</td>
   </tr>
 </table>
