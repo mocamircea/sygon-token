@@ -281,4 +281,10 @@ INPUT<br/>
   <tr>
     <td>PRO expenditure destination</td> <td>Operational entity</td>
   </tr>
+  <tr>
+    <td>ED3 expenditure destination</td> <td>Operational entity</td>
+  </tr>
+  <tr>
+    <td>ED4 expenditure destination</td> <td>Operational entity</td>
+  </tr>
 </table>
