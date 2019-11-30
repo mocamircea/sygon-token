@@ -194,7 +194,7 @@ INPUT<br/>
   <tr><td><b>Index</b></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
   </table>
   <br/><br>
-  Example:<br/>
+  <b>Example</b><br/>
   If an application A generates a revenue of 100 tokens, then the contributors of the application A get rewarded through a splitter. The splitter is created by user U1, with a secondary user U2. U2 further adds U3 and U4 (at entries 2 and 3 respectively) in the splitter. Split weights (WSplit) are: WSplit(U1)=30, WSplit(U2)=45, WSplit(U3)=35, WSplit(U4)=20. Any amount of tokens transferred to their splitter will lead to transfers from <i>addrAliasTarget</i> to split destination addresses in the following amounts: U1=30, U2=31.5, U3=24.5 and U4=14. <br/><br/>
   In this way, the monetization of the knowledge produced and delivered by the SYGON technology is transparently distributed among contributors only. The SynergyCrowds company, as an operational entity of the products, has an absolutely equal position with any other contributors, in terms of receiving revenues.<br/><br/>
   Any address in a split schema can be changed with a new one, by its owner.<br/><br/>
@@ -216,7 +216,7 @@ INPUT<br/>
 
 
 <h2>3 Burn</h2>
-<p>SYGON tokens can be burned by any token holder, from their balances. Also, a fraction of the collected fees are periodicaly burned (see chapter 4 - Fees).</p>
+<p>SYGON tokens can be burned by any token holder, from own balance. Also, a fraction of the collected fees are periodicaly burned (see chapter 4 - Fees).</p>
 <p>The burn operation can only be applied to the released quantity of SYGON tokens. </p>
 <p>The burn operation is limited to a maximum quantity (TMBQ). </p>
 <p>The burn operation is forbidden for the Creator, so that the total supply is not affectable by this operation.</p>
@@ -255,36 +255,36 @@ INPUT<br/>
 <h3>Roles and responsibilities</h3>
 <table>
   <tr>
-    <td><b>Actor</b></td> <td><b>Entity</b></td>
+    <td><b>Actor</b></td> <td><b>Identifier</b></td> <td><b>Entity</b></td>
   </tr>
   <tr>
-    <td>Creator</td> <td> </td>
+    <td>Creator</td> <td><i>addrCreator</i></td> <td>Co-founder, Mircea Moca</td>
   </tr>
   <tr>
-    <td>Fee Manager</td> <td>Software - decentralized mechanism controlled by all sygons</td>
+    <td>Fee Manager</td> <td><i>addrFeeManager</i></td> <td>Software - decentralized mechanism controlled by all sygons</td>
   </tr>
   <tr>
-    <td>Alias Target Manager</td> <td>Operational entity</td>
+    <td>Alias Target Manager</td> <td><i>addrAliasTarget</i></td> <td>Operational entity</td>
   </tr>
   <tr>
-    <td>Other</td> <td>Any user holding and transferring SYGON tokens</td>
+    <td>Other</td> <td></td> <td>Any user holding and transferring SYGON tokens</td>
   </tr>
 </table> <br/>
 
 <table>
   <tr>
-    <td><b>Account</b></td> <td><b>Owner</b></td>
+    <td><b>Account</b></td> <td><b>Identifier</b></td> <td><b>Owner</b></td>
   </tr>
   <tr>
-    <td>OPR expenditure destination</td> <td>Operational entity</td>
+    <td>OPR expenditure destination</td> <td><i>expDestinations["OPR"].addr</i></td> <td>Operational entity</td>
   </tr>
   <tr>
-    <td>PRO expenditure destination</td> <td>Operational entity</td>
+    <td>PRO expenditure destination</td> <td><i>expDestinations["PRO"].addr</i></td> <td>Operational entity</td>
   </tr>
   <tr>
-    <td>ED3 expenditure destination</td> <td>Operational entity</td>
+    <td>ED3 expenditure destination</td> <td><i>expDestinations["ED3"].addr</i></td> <td>Creator, initially not allocated</td>
   </tr>
   <tr>
-    <td>ED4 expenditure destination</td> <td>Operational entity</td>
+    <td>ED4 expenditure destination</td> <td><i>expDestinations["ED4"].addr</i></td> <td>Creator, initially not allocated</td>
   </tr>
 </table>
