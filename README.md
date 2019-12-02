@@ -271,6 +271,12 @@ INPUT<br/>
   </tr>
 </table> <br/>
 
+The Creator is interested in building the SYGON technology. For this, he releases SYGON tokens to initial contributors that  participate to building the technology through specific development projects. This contribution is directly rewarded by the Creator through token releases.
+
+The collected fees can be distributed to two destinations: burn and the operational entity. The ratio between the two is decided by all willing sygons through vote and algorithmic meritocracy. Hence, the Fee Manager is a software mechanism used by sygons to decide in a decentralized manner.
+  
+The Alias Target Manager is owned by the operational entity, having the responsibility to distribute the entire monetization of the products to their contributors. The contributors to be rewarded are registered in splitters. The key aspect here is that there is no other way to withdraw amounts from the monetization but only to contributors through splitters. In this part of the token flow, the operational entity plays a role equal to the role of any initial contributor, regarding the distribution of the realized revenues. There is no possible way for the operational entity to have revenues distributed to itself for any particular product while the rest of its contributors to be not.
+
 <table>
   <tr>
     <td><b>Account</b></td> <td><b>Identifier</b></td> <td><b>Owner</b></td>
@@ -288,3 +294,5 @@ INPUT<br/>
     <td>ED4 expenditure destination</td> <td><i>expDestinations["ED4"].addr</i></td> <td>Creator, initially not allocated</td>
   </tr>
 </table>
+
+The operational entity owns the OPR and PRO expenditure destinations. While the first one is used to support the operational activities required by the products of the SYGON technology, the second one is allocated for promotional activities related to the respective products. The ED3 and ED4 destinations are desinged for future use. Once they are explicitly allocated, the related documentation will be provided in this repository, as for the others.
