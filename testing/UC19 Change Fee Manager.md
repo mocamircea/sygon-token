@@ -1,4 +1,4 @@
-# UC19 Change Fees Address
+# UC19 Change Fee Manager
 ## <i>changeFeesAddr</i>
 
 The owner of the <i>addrFees</i> changes the address that collects fees.
