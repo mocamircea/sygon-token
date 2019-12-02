@@ -130,7 +130,7 @@ There are five types of actor that interact with the SYGON token:
 
   <h3>1.2 <i>transferAsTokenRelease</i></h3>
   <p>
-The SYGON token is put into circulation with this method, by the Creator only. This special method of transfer is meant to  release amounts of SYGON tokens directly to Initial Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products. Further, the Initial Contributors will be able to further put tokens on the market by selling them to any other interested parties.
+The SYGON token is put into circulation with this method, by the Creator only. This special method of transfer is meant to  release amounts of SYGON tokens directly to Build Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products. Further, the Build Contributors will be able to further put tokens on the market by selling them to any other interested parties.
   
 INPUT<br/>
   <ul>
