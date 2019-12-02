@@ -95,10 +95,10 @@ The SYGON token implements the business model adopted by SynergyCrowds, with spe
 There are five types of actor that interact with the SYGON token:
   <ol>
     <li>
-      <b>Creator</b> releases SYGON tokens (with a dedicated method) to the <i>Initial Contributors</i> for their contribution to developing the SYGON technology.
+      <b>Creator</b> releases SYGON tokens (with a dedicated method) to the <i>Build Contributors</i> for their contribution to developing the SYGON technology.
     </li>
     <li>
-      <b>Initial Contributor</b> directly contribute to the development of the SYGON technology generally by working on different tasks of specific development projects.
+      <b>Build Contributor</b> directly contributes to the development of the SYGON technology generally by working on different tasks of specific development projects. This role assimilates both <b>build</b> and <b>extend</b> contribution types (see <a href="https://medium.com/synergycrowds/sygon-token-5324be713c08"><i>The Sygon token</i></a> article, <b>Utility design</b> section).
     </li>
     <li>
       <b>Alias Target Manager</b> manages the target address of aliases and owns <i>addrAliasTarget</i>.
