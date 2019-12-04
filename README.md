@@ -151,24 +151,24 @@ INPUT<br/>
       The installment ID of the current transfer for a particular Project ID. This is to provide transparency, by allowing anyone to track release transfers according to several milestones, along a roadmap of a project. For example, if the project targets the development of a software component, this approach matches with software development lifecycle, meaning that contribution is rewarded gradually for consecutive releases of a software component.<br/>
     </li>
   </ul>
-  <h4>Expenditure Destinations</h4>
+  <h4>Release Destinations</h4>
   
-   There are five possible expenditure destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights and the amount transferred to DEV. <br/>
+   There are five possible release destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights and the amount transferred to DEV. <br/>
    
    <img src="SYGON-token-transfer-as-token-release.png"/> <br/>
    
    <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, and consequently, a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively.
-   <br/><br/> Also, there are destinations [3] ED3 and [4] ED4, with an initial weight of 0 (zero). These two destinations are reserved for future implementations.
+   <br/><br/> Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero). These two destinations are reserved for future implementations.
    <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed to Creator. Changing destinations emits specific events.
-   <br/><br/> <b>Reading Destinations</b> Details of any destination can be accessed through a valid name ("DEV", "PRO", "OPR", "ED3", "ED4"). The following attributes can be accessed: destination ID, address and weight.
+   <br/><br/> <b>Reading Destinations</b> Details of any destination can be accessed through a valid name ("DEV", "PRO", "OPR", "RD3", "RD4"). The following attributes can be accessed: destination ID, address and weight.
    <br/><br/>
     <table>
   <tr><td>ID</td><td>Name</td><td>Address</td><td>Weight</td></tr>
   <tr><td>0</td><td>DEV</td><td>Parameter for transfer as token release</td><td>100 (unmutable)</td></tr>
   <tr><td>1</td><td>PRO</td><td>At creation (mutable by Creator)</td><td>150 (mutable by Creator)</td></tr>
   <tr><td>2</td><td>OPR</td><td>At creation (mutable by Creator)</td><td>250 (mutable by Creator)</td></tr>
-  <tr><td>3</td><td>ED3</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
-  <tr><td>4</td><td>ED4</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
+  <tr><td>3</td><td>RD3</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
+  <tr><td>4</td><td>RD4</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
     </table>
     
   </p>
@@ -284,17 +284,17 @@ The Alias Target Manager is owned by the operational entity, having the responsi
     <td><b>Account</b></td> <td><b>Identifier</b></td> <td><b>Owner</b></td>
   </tr>
   <tr>
-    <td>OPR expenditure destination</td> <td><i>expDestinations["OPR"].addr</i></td> <td>Operational entity</td>
+    <td>OPR release destination</td> <td><i>expDestinations["OPR"].addr</i></td> <td>Operational entity</td>
   </tr>
   <tr>
-    <td>PRO expenditure destination</td> <td><i>expDestinations["PRO"].addr</i></td> <td>Operational entity</td>
+    <td>PRO release destination</td> <td><i>expDestinations["PRO"].addr</i></td> <td>Operational entity</td>
   </tr>
   <tr>
-    <td>ED3 expenditure destination</td> <td><i>expDestinations["ED3"].addr</i></td> <td>Creator, initially not allocated</td>
+    <td>RD3 release destination</td> <td><i>expDestinations["RD3"].addr</i></td> <td>Creator, initially not allocated</td>
   </tr>
   <tr>
-    <td>ED4 expenditure destination</td> <td><i>expDestinations["ED4"].addr</i></td> <td>Creator, initially not allocated</td>
+    <td>RD4 release destination</td> <td><i>expDestinations["RD4"].addr</i></td> <td>Creator, initially not allocated</td>
   </tr>
 </table>
 
-The operational entity owns the OPR and PRO expenditure destinations. While the first one is used to support the operational activities required by the products of the SYGON technology, the second one is allocated for promotional activities related to the respective products. The ED3 and ED4 destinations are desinged for future use. Once they are explicitly allocated, the related documentation will be provided in this repository, as for the others.
+The operational entity owns the OPR and PRO release destinations. While the first one is used to support the operational activities required by the products of the SYGON technology, the second one is allocated for promotional activities related to the respective products. The RD3 and RD4 destinations are desinged for future use. Once they are explicitly allocated, the related documentation will be provided in this repository, as for the others.
