@@ -1,10 +1,10 @@
 # SYGON token
 
 <p>
-  <table>
+  <table style="padding:5px;">
     <tr>
       <td>
-        <b>Name</b>
+        <b><h4>Name</h4></b>
       </td>
       <td>
         SYGON
@@ -12,7 +12,7 @@
     </tr>
     <tr>
       <td>
-        <b>Symbol</b>
+        <b><h4>Symbol</h4></b>
       </td>
       <td>
         SYGON
@@ -20,7 +20,7 @@
     </tr>
     <tr>
       <td>
-        <b>Type</b>
+        <b><h4>Type</h4></b>
       </td>
       <td>
         ERC20
@@ -28,7 +28,7 @@
     </tr>
     <tr>
       <td>
-        <b>Decimals</b>
+        <b><h4>Decimals</h4></b>
       </td>
       <td>
         18
@@ -36,7 +36,7 @@
     </tr>
     <tr>
       <td>
-        <b>Total Initial Supply (TIS)</b>
+        <b><h4>Total Initial Supply (TIS)</h4></b>
       </td>
       <td>
          Fixed, 7500000000. This is the maximum amount that can be released ever.
@@ -44,7 +44,7 @@
     </tr>
     <tr>
       <td>
-        <b>Total Released Quantity (TRQ)</b>
+        <b><h4>Total Released Quantity (TRQ)</h4></b>
       </td>
       <td>
         Total amount ever released from TIS.
@@ -52,7 +52,7 @@
     </tr>
     <tr>
       <td>
-        <b>Total Maximum Burnable Quantity (TMBQ)</b>
+        <b><h4>Total Maximum Burnable Quantity (TMBQ)</h4></b>
       </td>
       <td>
         Fixed, 6750000000 (representing 90% of the total initial supply).
@@ -60,7 +60,7 @@
     </tr>
     <tr>
       <td>
-        <b>Total Burned Quantity (TBQ)</b>
+        <b><h4>Total Burned Quantity (TBQ)</h4></b>
       </td>
       <td>
         Total amount of tokens burned so far. Burn applies to TRQ only.
@@ -68,7 +68,7 @@
     </tr>
     <tr>
       <td>
-        <b>Total Circulating Supply (TCS)</b>
+        <b><h4>Total Circulating Supply (TCS)</h4></b>
       </td>
       <td>
         Total token supply that was released and was not burned yet. TCS=TRQ-TBQ
@@ -76,7 +76,7 @@
     </tr>
     <tr>
       <td>
-        <b>Total Remaining Supply to be Released (TRSR)</b>
+        <b><h4>Total Remaining Supply to be Released (TRSR)</h4></b>
       </td>
       <td>
         Total remaining token supply that can still be distributed from initial supply. TRSR=TIS-TRQ
