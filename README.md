@@ -98,7 +98,7 @@ There are five types of actor that interact with the SYGON token:
       <b>Creator</b> releases SYGON tokens (with a dedicated method) to the <i>Build Contributors</i> for their contribution to developing the SYGON technology.
     </li>
     <li>
-      <b>Build Contributor</b> directly contributes to the development of the SYGON technology generally by working on different tasks of specific development projects. This role assimilates both <b>build</b> and <b>extend</b> contribution types (see <a href="https://medium.com/synergycrowds/sygon-token-5324be713c08"><i>The Sygon token</i></a> article, <b>Utility design</b> section).
+      <b>Build Contributor</b> directly contributes to the development of the SYGON technology generally by working on different tasks of specific development projects. This role assimilates the <b>build</b> contribution type described in <a href="https://medium.com/synergycrowds/sygon-token-5324be713c08"><i>The Sygon token</i></a> article, <b>Utility design</b> section.
     </li>
     <li>
       <b>Alias Target Manager</b> manages the target address of aliases and owns <i>addrAliasTarget</i>.
