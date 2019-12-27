@@ -124,13 +124,13 @@ There are five types of actor that interact with the SYGON token:
   The function checks if the the amount is transferred to an <b>alias</b> or a <b>splitter</b>, performing the transfer accordingly.
 <br/><br/>
   <b>Aliases</b><br/>
-  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amount transferred to an alias address is directed automatically to a unique address (defined by <i>addrAliasTarget</i>). <br/><br/>
-  More specifically, aliases are created by the operational entity (SynergyCrowds company) for all users of the SYGON technology products. The concept of alias can be found under the name of <i>Feed address</i> in the SynergyCrowds platform. This is a unique address that is allocated to any account when successfully upgrading to Level 2.
+  Aliases are Ethereum addresses that receive a special treatment in relationship with the SYGON token. Any amount transferred to an alias address is forwarded automatically to a unique address (defined by <i>addrAliasTarget</i>). <br/><br/>
+  More specifically, aliases are created by the operational entity (SynergyCrowds company) for all users of the SYGON technology products. The concept of alias can be found under the name of <i>Feed address</i> in the SynergyCrowds platform. This is a unique address that is allocated to every account after successfully upgrading to Level 2.
 </p>
 
   <h3>1.2 <i>transferAsTokenRelease</i></h3>
   <p>
-The SYGON token is put into circulation with this method, by the Creator only. This special method of transfer is meant to  release amounts of SYGON tokens directly to Build Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products. Further, the Build Contributors will be able to further put tokens on the market by selling them to any other interested parties.
+The SYGON tokens are put into circulation with this method, exclusively by the Creator. This special method of transfer is meant to  release amounts of SYGON tokens directly to Build Contributors. So the token release is fully covered in contribution. The token is never initially released for investment or speculation purposes (with approaches like ICO / IEO) but only to reward real contributions to building the SYGON technology and its products.
   
 INPUT<br/>
   <ul>
@@ -148,19 +148,19 @@ INPUT<br/>
     </li>
     <li>
       <b>Installment ID</b><br/>
-      The installment ID of the current transfer for a particular Project ID. This is to provide transparency, by allowing anyone to track release transfers according to several milestones, along a roadmap of a project. For example, if the project targets the development of a software component, this approach matches with software development lifecycle, meaning that contribution is rewarded gradually for consecutive releases of a software component.<br/>
+      The installment ID of the current transfer for a particular Project ID. This is to provide transparency, by allowing anyone to track release transfers according to several milestones, along a roadmap of a project. For example, if the project targets the development of a software component, this approach matches with software development lifecycle, meaning that the contribution is rewarded gradually, for consecutive releases of the developed software.<br/>
     </li>
   </ul>
   <h4>Release Destinations</h4>
   
-   There are five possible release destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights and the amount transferred to DEV. <br/>
+   There are five release destinations from which three are explicitly defined: [0] DEV (Project Development), [1] PRO (Promotion), [2] OPR (Operational). While DEV destination is explicit, the rest of the destinations are implicit. This means that for a new release, the amount explicitely stated defaultly targets the DEV destination. Consequently, amounts for PRO and OPR destinations are calculated automatically based on their weights in the current Release Structure and the amount transferred to DEV.<br/>
    
    <img src="SYGON-token-transfer-as-token-release.png"/> <br/>
    
-   <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that a transfer of 10000 SYGON tokens is performed to DEV, and consequently, a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively.
-   <br/><br/> Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero). These two destinations are reserved for future implementations.
-   <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are allowed to Creator. Changing destinations emits specific events.
-   <br/><br/> <b>Reading Destinations</b> Details of any destination can be accessed through a valid name ("DEV", "PRO", "OPR", "RD3", "RD4"). The following attributes can be accessed: destination ID, address and weight.
+   <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that when a transfer of 10000 SYGON tokens is performed to DEV, automatically a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively are performed by the function.
+   <br/><br/> Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero) left for future implementations.
+   <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are possible and they are performed by the Creator.
+   <br/><br/> <b>Reading Destinations</b> Settings of any release destination can be accessed through a valid name ("DEV", "PRO", "OPR", "RD3", "RD4"). Settings are defined by: destination ID, address and weight.
    <br/><br/>
     <table>
   <tr><td>ID</td><td>Name</td><td>Address</td><td>Weight</td></tr>
@@ -176,16 +176,16 @@ INPUT<br/>
   <h3>1.3 <i>transferSplit</i></h3>
   <p>
     This is a special method of token transfer. The function is internal and it is called automatically, when 
-    the target address of a transfer is identified as splitter.<br/><br/>
-    For an address registered as splitter, this mechanism allows that any amount received through as a transfer is "forwarded" as transfers to other target addresses, according to a predefined split schema.<br/><br/>
+    the target address of a transfer is detected to be a splitter.<br/><br/>
+    For any address that is registered as splitter, this mechanism allows that any amount received as a transfer to it, is automatically "forwarded" to other addresses, according to a predefined split schema.<br/><br/>
   
   <b>Splitters</b><br/>
-  A splitter associates an address with a split schema. A split schema defines a set of transfer destinations with weights. This mechanism allows at least two contributors to receive rewards for their contributions.<br/><br/>
+  A splitter associates an address with a split schema, which defines a set of transfer destinations with associated weights. This mechanism allows at least two contributors to receive rewards for their contributions.<br/><br/>
   The contributor that creates the splitter is called <i>Primary</i> and the second one is called <i>Secondary</i> contributor. The secondary contributor can furhter configure the splitter by managing other 5 contributors at choice. <br/><br/>
   
   <img src="SYGON-token-split-transfer-splitter.png"/> <br/>
   
-  Splitters are generally used for automatically sharing the monetization of products among their contributors. <br/><br/>
+  Splitters are designed for automatically sharing the monetization of products among their contributors. <br/><br/>
   
   Any amount of tokens sent to a splitter is automatically distributed among the destinations defined in the split schema.<br/></br>
   Split schema <br/>
