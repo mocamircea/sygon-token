@@ -157,23 +157,24 @@ INPUT<br/>
    
    <img src="SYGON-token-transfer-as-token-release.png"/> <br/>
    
-   <br/><br/> All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that when a transfer of 10000 SYGON tokens is performed to DEV, automatically a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively are performed by the function.
-   <br/><br/> Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero) left for future implementations.
-   <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are possible and they are performed by the Creator.
-   <br/><br/> <b>Reading Destinations</b> Settings of any release destination can be accessed through a valid name ("DEV", "PRO", "OPR", "RD3", "RD4"). Settings are defined by: destination ID, address and weight.
+   All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that when a transfer of 10000 SYGON tokens is performed to DEV, automatically a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively are performed by the function.
+   
+   Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero) left for future implementations.
+   
+   <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are possible and they are performed by the Creator.
+   
+   <b>Reading Destinations</b> Settings of any release destination can be accessed through a valid name ("DEV", "PRO", "OPR", "RD3", "RD4"). Settings are defined by: destination ID, address and weight.
    
    Currently the following release structure is used but this can be adjusted at any time in the future based on several factors like: opinions of contributors, market prices, operational costs etc.
    
-    <table>
+  <table>
   <tr><td>ID</td><td>Name</td><td>Address</td><td>Weight</td></tr>
   <tr><td>0</td><td>DEV</td><td>Parameter for transfer as token release</td><td>100 (unmutable)</td></tr>
   <tr><td>1</td><td>PRO</td><td>At creation (mutable by Creator)</td><td>150 (mutable by Creator)</td></tr>
   <tr><td>2</td><td>OPR</td><td>At creation (mutable by Creator)</td><td>250 (mutable by Creator)</td></tr>
   <tr><td>3</td><td>RD3</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
   <tr><td>4</td><td>RD4</td><td>0 (mutable by Creator)</td><td>0 (mutable by Creator)</td></tr>
-    </table>
-    
-  </p>
+  </table>
   
   <h3>1.3 <i>transferSplit</i></h3>
   <p>
