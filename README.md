@@ -157,7 +157,7 @@ INPUT<br/>
    
    <img src="SYGON-token-transfer-as-token-release.png"/> <br/>
    
-   All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50} means that when a transfer of 10000 SYGON tokens is performed to DEV, automatically a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively are performed by the function.
+   All destinations together define the <b>Release Structure</b> (RS). For example, a structure like   RS{0:20,1:30,2:50,3:0,4:0} means that when a transfer of 10000 SYGON tokens is performed to DEV, automatically a transfer of 15000 SYGONs to PRO and a transfer of 25000 SYGONs to OPR destinations respectively are performed by the function.
    
    Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero) left for future implementations.
    
