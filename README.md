@@ -198,15 +198,15 @@ INPUT<br/>
   If an application A generates a revenue of 100 tokens, then the contributors of the application A get rewarded through a splitter. The splitter is created by user U1, with a secondary user U2. U2 further adds U3 and U4 (at entries 2 and 3 respectively) in the splitter. Split weights (WSplit) are: WSplit(U1)=30, WSplit(U2)=45, WSplit(U3)=35, WSplit(U4)=20. Any amount of tokens transferred to their splitter will lead to transfers from <i>addrAliasTarget</i> to split destination addresses in the following amounts: U1=30, U2=31.5, U3=24.5 and U4=14. <br/><br/>
   In this way, the monetization of the knowledge produced and delivered by the SYGON technology is transparently distributed among contributors only. The SynergyCrowds company, as an operational entity of the products, has an absolutely equal position with any other contributors, in terms of receiving revenues.<br/><br/>
   Any address in a split schema can be changed with a new one, by its owner.<br/><br/>
-  The operating entity can distribute revenues exclusively throught splitters.<br/><br/>
+  The operating entity can distribute revenues exclusively throught splitters, without any other possible option.<br/><br/>
   <b>Configuring a splitter</b><br/><br/>
   The primary contributor can change any destination address and weight in the splitter. The secondary contributor can change the address and weight of the 5 managed destinations.<br/>
-  Restriction: successfully transferring to a splitter requires that its weights must be configured correctly, namely the sum of the weights of the last 6 destinations must be 100.
+  Restriction: successfully transferring to a splitter requires that its weights are configured correctly, namely the sum of the weights of the last 6 destinations must be 100.
   </p>
   
   <h3>1.4 <i>transferFromAliasTarget</i></h3>
   <p>
-    This is a special method of token transfer ensuring that all amounts received at <i>addrAliasTarget</i> are transferred to splitters only. No other destination is possible. This mechanism guarantees to the contributors that the entire monetization of the delivered knowledge is distributed among them and this process is fully verifiable.<br/>
+    This is a special method of token transfer ensuring that all amounts received at <i>addrAliasTarget</i> are transferred to splitters only. No other destination is possible. This mechanism guarantees to the contributors that the entire monetization of the delivered knowledge is distributed among them and this process is completely transparent.<br/>
   Transfers from <i>addrAliasTarget</i> can be performed either directly or delegated.
   </p>
 <h2>2 Fractionable</h2>
@@ -271,7 +271,7 @@ INPUT<br/>
   </tr>
 </table> <br/>
 
-The Creator is interested in building the SYGON technology. For this, he releases SYGON tokens to build contributors that  participate to building the technology through specific development projects. This contribution is directly rewarded by the Creator through token releases.
+The Creator is interested in building the SYGON technology. For this, he releases SYGON tokens to contributors that  participate to building the technology through specific development projects.
 
 The collected fees can be distributed only to two destinations: <b>burn</b> and the <b>operational entity</b>. The ratio between the two destinations is decided by all willing sygons through vote and algorithmic meritocracy. Hence, the Fee Manager is a software mechanism used by sygons to decide in a decentralized manner.
 
