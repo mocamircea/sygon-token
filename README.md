@@ -161,7 +161,9 @@ INPUT<br/>
    <br/><br/> Also, there are destinations [3] RD3 and [4] RD4, with an initial weight of 0 (zero) left for future implementations.
    <br/><br/> <b>Changing Destinations</b> Only changing the address and weight of destinations [1-4] are possible and they are performed by the Creator.
    <br/><br/> <b>Reading Destinations</b> Settings of any release destination can be accessed through a valid name ("DEV", "PRO", "OPR", "RD3", "RD4"). Settings are defined by: destination ID, address and weight.
-   <br/><br/>
+   
+   Currently the following release structure is used but this can be adjusted at any time in the future based on several factors like: opinions of contributors, market prices, operational costs etc.
+   
     <table>
   <tr><td>ID</td><td>Name</td><td>Address</td><td>Weight</td></tr>
   <tr><td>0</td><td>DEV</td><td>Parameter for transfer as token release</td><td>100 (unmutable)</td></tr>
