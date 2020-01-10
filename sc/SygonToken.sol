@@ -20,13 +20,13 @@ contract SYGONtoken {
     
     // Expenditure Destination (for token release)
     
-    struct ExpDestSetting{
+    struct ReleaseDestSetting{
         uint8 nID;
         address addr;
         uint8 nWeight;
     }
 
-    mapping (string => ExpDestSetting) expDestinations;
+    mapping (string => ReleaseDestSetting) releaseDestinations;
     
     // Burn mechanism -- For checking convenience
     bool public bBurnIsActive;
@@ -104,10 +104,10 @@ contract SYGONtoken {
     modifier ValidReleaseAddress(address addrRelease) {
         require (addrRelease != addrCreator);
         
-        require (addrRelease != expDestinations["PRO"].addr);
-        require (addrRelease != expDestinations["OPR"].addr);
-        require (addrRelease != expDestinations["ED3"].addr);
-        require (addrRelease != expDestinations["ED4"].addr);
+        require (addrRelease != releaseDestinations["PRO"].addr);
+        require (addrRelease != releaseDestinations["OPR"].addr);
+        require (addrRelease != releaseDestinations["ED3"].addr);
+        require (addrRelease != releaseDestinations["ED4"].addr);
         
         require (addrRelease != addrFees);
         
@@ -120,16 +120,16 @@ contract SYGONtoken {
     }
     
     modifier NotReleaseAddress(address addrCheck) {
-        require (addrCheck != expDestinations["DEV"].addr);
-        require (addrCheck != expDestinations["PRO"].addr);
-        require (addrCheck != expDestinations["OPR"].addr);
-        require (addrCheck != expDestinations["ED3"].addr);
-        require (addrCheck != expDestinations["ED4"].addr);
+        require (addrCheck != releaseDestinations["DEV"].addr);
+        require (addrCheck != releaseDestinations["PRO"].addr);
+        require (addrCheck != releaseDestinations["OPR"].addr);
+        require (addrCheck != releaseDestinations["ED3"].addr);
+        require (addrCheck != releaseDestinations["ED4"].addr);
         _;
     }
     
     modifier OnlyImplicitDestination(string sEDName) {
-        require(expDestinations[sEDName].nID >= 1 && expDestinations[sEDName].nID <= 4);
+        require(releaseDestinations[sEDName].nID >= 1 && releaseDestinations[sEDName].nID <= 4);
         _;
     }
     
@@ -166,12 +166,12 @@ contract SYGONtoken {
         // Expenditure Destinations
         
         // Explicit
-        expDestinations["DEV"]=ExpDestSetting(0,address(0x0),100); // Only for coherence with implicit destinations in getters, address is never used
+        releaseDestinations["DEV"]=ReleaseDestSetting(0,address(0x0),100); // Only for coherence with implicit destinations in getters, address is never used
         // Implicit
-        expDestinations["PRO"]=ExpDestSetting(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
-        expDestinations["OPR"]=ExpDestSetting(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
-        expDestinations["ED3"]=ExpDestSetting(3,address(0),0); // Reserved for future use
-        expDestinations["ED4"]=ExpDestSetting(4,address(0),0); // Reserved for future use
+        releaseDestinations["PRO"]=ReleaseDestSetting(1,address(0x0068559ead059468fdc19207e44c88836c2063ae0b),150);
+        releaseDestinations["OPR"]=ReleaseDestSetting(2,address(0x00e9d1dad223552122bbaf68adade73285aab3bc37),250);
+        releaseDestinations["ED3"]=ReleaseDestSetting(3,address(0),0); // Reserved for future use
+        releaseDestinations["ED4"]=ReleaseDestSetting(4,address(0),0); // Reserved for future use
         
         // Burn
         bBurnIsActive = true;
@@ -260,13 +260,13 @@ contract SYGONtoken {
         // Calculate amounts for implicit transfers
         
         uint256 nTotalAmount = nAmount_DEV;
-        uint256 nAmount_PRO = (nAmount_DEV*expDestinations["PRO"].nWeight)/100;
+        uint256 nAmount_PRO = (nAmount_DEV*releaseDestinations["PRO"].nWeight)/100;
         nTotalAmount += nAmount_PRO;
-        uint256 nAmount_OPR = (nAmount_DEV*expDestinations["OPR"].nWeight)/100;
+        uint256 nAmount_OPR = (nAmount_DEV*releaseDestinations["OPR"].nWeight)/100;
         nTotalAmount += nAmount_OPR;
-        uint256 nAmount_ED3 = (nAmount_DEV*expDestinations["ED3"].nWeight)/100;
+        uint256 nAmount_ED3 = (nAmount_DEV*releaseDestinations["ED3"].nWeight)/100;
         nTotalAmount += nAmount_ED3;
-        uint256 nAmount_ED4 = (nAmount_DEV*expDestinations["PR4"].nWeight)/100;
+        uint256 nAmount_ED4 = (nAmount_DEV*releaseDestinations["PR4"].nWeight)/100;
         nTotalAmount += nAmount_ED4;
         
         // Check availability from Total Remaining Supply to be Released (TRSR)
@@ -280,20 +280,20 @@ contract SYGONtoken {
         emit TransferTokenRelease(addrTo, nProjectID, 0, nInstallmentID);
         
         // To Implicit Destinations
-        executeTransfer(msg.sender, expDestinations["PRO"].addr, nAmount_PRO);
-        emit TransferTokenRelease(expDestinations["PRO"].addr, nProjectID, expDestinations["PRO"].nID, nInstallmentID);
+        executeTransfer(msg.sender, releaseDestinations["PRO"].addr, nAmount_PRO);
+        emit TransferTokenRelease(releaseDestinations["PRO"].addr, nProjectID, releaseDestinations["PRO"].nID, nInstallmentID);
         
-        executeTransfer(msg.sender, expDestinations["OPR"].addr, nAmount_OPR);
-        emit TransferTokenRelease(expDestinations["OPR"].addr, nProjectID, expDestinations["OPR"].nID, nInstallmentID);
+        executeTransfer(msg.sender, releaseDestinations["OPR"].addr, nAmount_OPR);
+        emit TransferTokenRelease(releaseDestinations["OPR"].addr, nProjectID, releaseDestinations["OPR"].nID, nInstallmentID);
         
         if (nAmount_ED3 > 0) {
-            executeTransfer(msg.sender, expDestinations["ED3"].addr, nAmount_ED3);
-            emit TransferTokenRelease(expDestinations["ED3"].addr, nProjectID, expDestinations["ED3"].nID, nInstallmentID);
+            executeTransfer(msg.sender, releaseDestinations["ED3"].addr, nAmount_ED3);
+            emit TransferTokenRelease(releaseDestinations["ED3"].addr, nProjectID, releaseDestinations["ED3"].nID, nInstallmentID);
         }
         
         if (nAmount_ED4 > 0) {
-            executeTransfer(msg.sender, expDestinations["ED4"].addr, nAmount_ED4);
-            emit TransferTokenRelease(expDestinations["ED4"].addr, nProjectID, expDestinations["ED4"].nID, nInstallmentID);
+            executeTransfer(msg.sender, releaseDestinations["ED4"].addr, nAmount_ED4);
+            emit TransferTokenRelease(releaseDestinations["ED4"].addr, nProjectID, releaseDestinations["ED4"].nID, nInstallmentID);
         }
         
         bTransferTokenReleaseSuccess = true;
@@ -357,15 +357,15 @@ contract SYGONtoken {
     // Access details of expenditure destinations
 
     function getAddressForExpDest(string sEDName) public view returns (address addrExpDestAddress) {
-        return expDestinations[sEDName].addr;
+        return releaseDestinations[sEDName].addr;
     }
     
     function getIDForExpDest(string sEDName) public view returns (uint8 nExpDestID) {
-        return expDestinations[sEDName].nID;
+        return releaseDestinations[sEDName].nID;
     }
     
     function getWeightForExpDest(string sEDName) public view returns (uint nExpDestWeight) {
-        return expDestinations[sEDName].nWeight;
+        return releaseDestinations[sEDName].nWeight;
     }
     
     // Modify Settings for Expenditure Destinations
@@ -374,7 +374,7 @@ contract SYGONtoken {
     function setAddressForExpDest(string sEDName, address addrNew) public
         OnlyCreator NotCreator(addrNew) OnlyImplicitDestination(sEDName) returns (bool bChangeEDAddressSuccess) {
         
-        expDestinations[sEDName].addr = addrNew;
+        releaseDestinations[sEDName].addr = addrNew;
         emit ChangeEDAddress(sEDName, addrNew);
         bChangeEDAddressSuccess = true;
     }
@@ -382,7 +382,7 @@ contract SYGONtoken {
     function setWeightForExpDest(string sEDName, uint8 nNewWeight) public
         OnlyCreator StrictPositive(nNewWeight) OnlyImplicitDestination(sEDName) returns (bool bChangeEDWeightSuccess) {
         
-        expDestinations[sEDName].nID = nNewWeight;
+        releaseDestinations[sEDName].nID = nNewWeight;
         emit ChangeEDWeight(sEDName, nNewWeight);
         bChangeEDWeightSuccess = true;
     }
@@ -447,7 +447,7 @@ contract SYGONtoken {
         if(balances[addrFees]>=100){
             uint256 nAmountToBurn = (balances[addrFees]*nBurnFromFeeQuota)/100;
             burn(nAmountToBurn);
-            if(conditionalTransfer(msg.sender, expDestinations["OPR"].addr, balances[addrFees]-nAmountToBurn)){
+            if(conditionalTransfer(msg.sender, releaseDestinations["OPR"].addr, balances[addrFees]-nAmountToBurn)){
                 bDistrAndBurnFeeSuccess = true;
             }
         }
