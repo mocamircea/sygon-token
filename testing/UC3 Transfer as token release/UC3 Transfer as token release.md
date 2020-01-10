@@ -1,12 +1,14 @@
 # UC3 Transfer as token release
 ## <i>transferAsTokenRelease</i>
 
-Tokens are released from the <i>balances[addrCreator]</i> by Creator, exclusively with this method. There is no other way to release tokens from Creator's balance.
+The Creator releases tokens exclusively with this method. There is no other way to release tokens from the Creator's balance.
 
-In a token release transfer, the Creator transfers an amount <i>nAmount</i> to a contributor (providing an address and the "DEV" destination).
+In a token release transfer, the Creator transfers an amount <i>nAmount</i> to a contributor for a specific project and installment.
 
 ## Preconditions
-The remaining releasable supply covers the cumulated amounts to be transferred to all release destinations.
+Input parameters: address of the contributor, amount to transfer, project ID and installment ID.
+
+The remaining releasable supply must cover the cumulated amounts that are transferred to all release destinations in the current release.
 
 <b>Transfer restrictions</b>: the amount is strictly positive, balance of Creator fully covers the entire amount (for all release destinations), can not transfer to Creator, can not transfer to a splitter, address required in the transfer must be different from all release destinations [PRO, OPR, ED3, ED4], can not trasfer to 0x0, can not trasfer to <i>addrFees</i>, the amount is not burned.
 
