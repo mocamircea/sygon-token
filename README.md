@@ -228,7 +228,7 @@ INPUT<br/>
 
 <h2>4 Fees </h2>
   <p>
-  Fees are applied to all token transfers, except the initial token release transfers.
+  Fees >=0 are applied to all token transfers.
   </p>
   <p>
   Fees are calculated based on the amount of transferred tokens and a specific factor applied to the amount.<br/>
