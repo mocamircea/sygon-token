@@ -237,13 +237,13 @@ INPUT<br/>
       <td><b>Amount interval</b></td><td><b>Fee</b></td>
     </tr>
     <tr>
-      <td>(0,4000]</td><td>0.05%</td>
+      <td>(0,1000]</td><td>0.0015</td>
     </tr>
     <tr>
-      <td>(4000,40000]</td><td>0.005%</td>
+      <td>(4000,10000]</td><td>0.0009</td>
     </tr>
     <tr>
-      <td> >40000</td><td>0.0005%</td>
+      <td> >10000</td><td>0.000005</td>
     </tr>
     </table>
   </p>
