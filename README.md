@@ -95,7 +95,7 @@ The SYGON token implements the business model adopted by SynergyCrowds, with spe
 There are five types of actor that interact with the SYGON token:
   <ol>
     <li>
-      <b>Creator</b> releases SYGON tokens (with a dedicated method) to the <i>Build Contributors</i> for their contribution to developing the SYGON technology.
+      <b>Creator</b> releases SYGON tokens to the <i>Build Contributors</i>, to reward their contribution to developing the SYGON technology.
     </li>
     <li>
       <b>Build Contributor</b> directly contributes to the development of the SYGON technology generally by working on different tasks of specific development projects. This role assimilates the <b>build</b> contribution type described in <a href="https://medium.com/synergycrowds/sygon-token-5324be713c08"><i>The Sygon token</i></a> article, <b>Utility design</b> section.
@@ -104,10 +104,10 @@ There are five types of actor that interact with the SYGON token:
       <b>Alias Target Manager</b> manages the target address of aliases and owns <i>addrAliasTarget</i>.
     </li>
     <li>
-      <b>Fee Manager</b> manages the settings of the fee mechanism and the address collects fees applied to token transfers. The Fee Manager is a role played by a decentralized mechanism that allows all sygons to decide on the fee policy based on algorithmic meritocracy. The Fee Manager owns <i>addrFees</i>.
+      <b>Fee Manager</b> manages the settings of the fee mechanism and owns the address that collects fees applied to token transfers (<i>addrFees</i>). The Fee Manager role is played by a software, decentralized mechanism that allows all sygons to decide on the fee policy based on algorithmic meritocracy.
     </li>
     <li>
-      <b>Other</b> is played by any other users, holding and transferring tokens for any purpose.
+      <b>Other</b> is played by any other users, holding and transferring SYGON tokens for any purpose.
     </li>
   </ol>
 </p>
