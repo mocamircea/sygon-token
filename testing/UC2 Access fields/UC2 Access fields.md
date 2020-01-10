@@ -24,5 +24,10 @@ Access fields with automatically generated accessors for contract fields:
 
 - addrAliasTarget
 
+<hr/>
 
-Verify if getter is generated and check value against value specified in constructor.
+### Test 1
+Verify if all getters are generated.
+
+### Test 2
+Check value returned by getter against value specified in constructor.
