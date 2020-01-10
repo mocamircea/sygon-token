@@ -228,10 +228,10 @@ INPUT<br/>
 
 <h2>4 Fees </h2>
   <p>
-  Fees >=0 are applied to all token transfers.
+  Certain fees are applied to all token transfers.
   </p>
   <p>
-  Fees are calculated based on the amount of transferred tokens and a specific factor applied to the amount.<br/>
+  Fees are calculated based on the amount of transferred tokens and a specific factor (defined in <i>feeSettings</i>).<br/>
   <table>
     <tr>
       <td><b>Amount interval</b></td><td><b>Fee</b></td>
