@@ -6,14 +6,28 @@ The Creator releases tokens exclusively with this method. There is no other way 
 In a token release transfer, the Creator transfers an amount <i>nAmount</i> to a contributor for a specific project and installment.
 
 ## Preconditions
-Input parameters: address of the contributor, amount to transfer, project ID and installment ID.
+Input parameters:
 
-The remaining releasable supply must cover the cumulated amounts that are transferred to all release destinations in the current release.
+1. Address of the contributor
+2. Amount to transfer
+3. Project ID
+4. Installment ID.
 
-<b>Transfer restrictions</b>: the amount is strictly positive, balance of Creator fully covers the entire amount (for all release destinations), can not transfer to Creator, can not transfer to a splitter, address required in the transfer must be different from all release destinations [PRO, OPR, ED3, ED4], can not trasfer to 0x0, can not trasfer to <i>addrFees</i>, the amount is not burned.
+<b>Transfer restrictions</b>: 
+1. The function can be called by Creator only
+2. The contributor address is:
+    1. Not Creator
+    2. None of the release destinations [PRO, OPR, ED3, ED4]
+    3. Not <i>addrFees</i>
+    4. Not <i>addrAliasTarget</i>
+    5. Not a splitter
+    6. Not 0x0
+3. The amount to transfer is strictly positive
+4. Balance of Creator fully covers the entire amount required by the current release
+5. The amount is not burned.
 
 ## Steps
-For any amount transferred to a DEV destination, the corresponding amounts for all other 4 release destinations [PRO, OPR, ED3, ED4] are automatically calculated using <i>ReleaseDestSetting.nWeight</i>. Amounts for all release destinations must be successfully transferred atomically.
+For any amount transferred to a DEV destination, the corresponding amounts for all 4 implicit release destinations [PRO, OPR, ED3, ED4] are automatically calculated using <i>ReleaseDestSetting.nWeight</i>.
 
 A fee is collected at <i>addrFees</i> from each particular transfer, according to the <i>feeSettings</i>.
 
