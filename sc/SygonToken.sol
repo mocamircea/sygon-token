@@ -50,7 +50,7 @@ contract SYGONtoken {
     // Splitters
     struct SplitWeight {
         address addr;
-        uint8 weight;
+        uint16 weight;
     }
     
     struct SplitSchema {
@@ -214,7 +214,7 @@ contract SYGONtoken {
     // TRANSFERS
     
     function transfer(address addrTo, uint256 nAmount) public 
-        ForbidCreator NotCreator(addrTo) PreventBurn(addrTo) StrictPositive(nAmount) NotAliasTarget(msg.sender) NotFromFees(msg.sender) returns(bool bTransferSuccess) {
+        ForbidCreator NotCreator(addrTo) StrictPositive(nAmount) NotAliasTarget(msg.sender) NotFromFees(msg.sender) PreventBurn(addrTo) returns(bool bTransferSuccess) {
 
         require(balances[msg.sender] >= nAmount);
     
@@ -301,13 +301,13 @@ contract SYGONtoken {
     
     function transferSplit(address addrFrom, uint256 nAmount) internal {
         
-            uint256 nCalcAmount = (nAmount * splitters[addrFrom].destinations[0].weight)/100;
+            uint256 nCalcAmount = (nAmount * splitters[addrFrom].destinations[0].weight)/1000;
             executeTransfer(addrFrom, splitters[addrFrom].destinations[0].addr, nCalcAmount);
             nCalcAmount = nAmount-nCalcAmount;
             
             for(uint8 i = 1; i<=6; i++){
                 if(splitters[addrFrom].destinations[i].weight>0){
-                    executeTransfer(addrFrom, splitters[addrFrom].destinations[i].addr, (nCalcAmount*splitters[addrFrom].destinations[i].weight)/100);
+                    executeTransfer(addrFrom, splitters[addrFrom].destinations[i].addr, (nCalcAmount*splitters[addrFrom].destinations[i].weight)/1000);
                 }
             }
     }
@@ -490,14 +490,14 @@ contract SYGONtoken {
     
     // Add new splitter
     
-    function addSplitter(address addrPrim, uint8 w1, address addrSec) public returns (bool bAddSplitterSuccess) {
+    function addSplitter(address addrPrim, uint16 w1, address addrSec) public returns (bool bAddSplitterSuccess) {
         require(msg.sender != addrPrim);
         require(msg.sender != addrSec);
         require(addrPrim != addrSec);
-        require(w1>0 && w1<=100);
+        require(w1>0 && w1<1000);
         
         splitters[msg.sender].destinations.push(SplitWeight(addrPrim,w1));
-        splitters[msg.sender].destinations.push(SplitWeight(addrSec,100-w1));
+        splitters[msg.sender].destinations.push(SplitWeight(addrSec,1000-w1));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
@@ -537,12 +537,12 @@ contract SYGONtoken {
     // Check if split weights are valid
     
     function splitWeightsValid(address addrSplitted) public view returns (bool bSplitWeightsAreValid) {
-        if(splitters[addrSplitted].destinations[0].weight>0 && splitters[addrSplitted].destinations[0].weight<=99){
-            uint8 sum = 0;
+        if(splitters[addrSplitted].destinations[0].weight>0 && splitters[addrSplitted].destinations[0].weight<=999){
+            uint16 sum = 0;
             for (uint8 i=1; i<=6; i++){
                 sum += splitters[addrSplitted].destinations[i].weight;
             }
-            if(sum == 100){
+            if(sum == 1000){
                 bSplitWeightsAreValid = true;
             }
         }
