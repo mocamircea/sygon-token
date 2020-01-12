@@ -1,7 +1,7 @@
 # UC5 conditionalTransfer (internal)
 ## <i>conditionalTransfer</i>
 
-Checks if recipient is splitter or alias and delegates to <i>executeTransfer</i>
+Checks if recipient of transfer is splitter or alias and delegates to <i>executeTransfer</i>
 
 ## Preconditions
 None, high-level restrictions are assessed by callers.
