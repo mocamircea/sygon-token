@@ -1,7 +1,7 @@
 # UC4 Transfer
 ## <i>transfer</i>
 
-The sender transfers an amount of tokens to a given address.
+The sender transfers from own balance an amount of tokens to a given address.
 
 ## Preconditions
 
