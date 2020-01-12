@@ -17,11 +17,11 @@ Any user can add a new splitter. When creating a new splitter, only the primary 
 3. Provided weight value is in the (0,100) range.
 
 ### Steps
-Add new entry in splitter for primary destination with provided weight.
+Add new entry in <i>splitters</i> for primary destination, with provided weight.
 
-Add new entry in splitter for secondary destination with calculated weight.
+Add new entry in <i>splitter</i> for secondary destination, with calculated weight.
 
-Add new entries for 5 managed destinations with address 0, weight=0
+Add empty entries for 5 managed destinations with address 0 and weight=0.
 
 ### Postconditions
 Returns true if the splitter is successfully created.
