@@ -24,6 +24,6 @@ If calculated fee is > 0 then update balances of sender and <i>addrFees</i> with
 
 Emit <i>Transfer</i>.
 
-### Postconditions
+## Postconditions
 All balances of sender, receiver and <i>addrFees</i> are updated with the transferred amounts.
 
