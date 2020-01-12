@@ -4,6 +4,12 @@
 Checks if recipient of transfer is splitter or alias and delegates to <i>executeTransfer</i>
 
 ## Preconditions
+#### Input parameters
+1. Address of sender
+2. Address of recipient
+3. Amount to transfer.
+
+#### Restrictions
 None, high-level restrictions are assessed by callers.
 
 ## Steps
