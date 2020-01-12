@@ -1,7 +1,7 @@
 # UC6 executeTransfer (internal)
 ## <i>executeTransfer</i>
 
-### Preconditions
+## Preconditions
 
 #### Input parameters
 1. Address of sender
@@ -11,7 +11,7 @@
 #### Restrictions
 None, assessed by callers.
 
-### Steps
+## Steps
 Calculate fee by delegating to <i>calculateFee</i>.
 
 Calculate net amount for the transfer.
