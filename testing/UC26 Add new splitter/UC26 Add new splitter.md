@@ -14,7 +14,7 @@ Any user can add a new splitter. When creating a new splitter, only the primary 
     1. Not the primary destination
     2. Not the secondary destination of splitter
 2. The primary and secondary destinations are different
-3. Provided weight value is in the (0,100) range.
+3. Provided weight value is in the (0,1000) range.
 
 ### Steps
 Add new entry in <i>splitters</i> for primary destination, with provided weight.
