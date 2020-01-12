@@ -2,6 +2,13 @@
 ## <i>executeTransfer</i>
 
 ### Preconditions
+
+#### Input parameters
+1. Address of sender
+2. Address of recipient
+3. Amount to transfer.
+
+#### Restrictions
 None, assessed by callers.
 
 ### Steps
