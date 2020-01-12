@@ -1,12 +1,20 @@
 # UC26 Add new splitter
 ## <i>addSplitter</i>
 
-Any user can add a new splitter. When creating a new splitter, only the primary and secondary entries are assigned at creation. The rest of the entries can 
-later be configured with <i>configSplitter</i>.
+Any user can add a new splitter. When creating a new splitter, only the primary and secondary entries are required. The rest of the entries can be further configured with the <i>configSplitter</i> function.
 
 ### Preconditions
-Restrictions: the sender can not be primary or secondary destination of splitter, primary and secondary addresses must be different, 
-the provided weight for primary entry must be in the (0,100] range.
+#### Input parameters
+1. Address of primary destination
+2. Weight for primary destination
+3. Address of secondary destination
+
+#### Restrictions
+1. The sender is
+    1. Not the primary destination
+    2. Not the secondary destination of splitter
+2. The primary and secondary destinations are different
+3. Provided weight value is in the (0,100) range.
 
 ### Steps
 Add new entry in splitter for primary destination with provided weight.
