@@ -497,7 +497,7 @@ contract SYGONtoken {
         require(w1>0 && w1<1000);
         
         splitters[msg.sender].destinations.push(SplitWeight(addrPrim,w1));
-        splitters[msg.sender].destinations.push(SplitWeight(addrSec,1000-w1));
+        splitters[msg.sender].destinations.push(SplitWeight(addrSec,1000));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
         splitters[msg.sender].destinations.push(SplitWeight(address(0x0),0));
