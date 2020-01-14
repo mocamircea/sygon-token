@@ -243,8 +243,7 @@ contract SYGONtoken {
                 bConditionalTransferSuccess = true;
             }else{
                 if(splitWeightsValid(addrTo)) {  // check if splitter is correctly defined
-                    executeTransfer(addrFrom, addrTo, nAmount);
-                    transferSplit(addrTo, nAmount);
+                    transferSplit(addrTo, executeTransfer(addrFrom, addrTo, nAmount));
                     bConditionalTransferSuccess = true;
                 }
             }
@@ -332,7 +331,7 @@ contract SYGONtoken {
     }
     //
     
-    function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private {
+    function executeTransfer(address addrFrom, address addrTo, uint256 nAmount) private returns(uint256 nRetNetAmount){
         // Calculate FEE
         uint256 nFee = calculateFee(nAmount);
         uint256 nNetAmount = nAmount-nFee;
@@ -348,6 +347,8 @@ contract SYGONtoken {
             balances[addrFees] += nFee;
             emit Transfer(addrFrom, addrFees, nFee, true);
         }
+        
+        nRetNetAmount = nNetAmount;
     }
 
     
