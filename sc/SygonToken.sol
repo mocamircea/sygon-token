@@ -341,7 +341,7 @@ contract SYGONtoken {
         // Transfer net amount
         balances[addrFrom] -= nNetAmount;
         balances[addrTo] += nNetAmount;
-        emit Transfer(addrFrom, addrTo, nAmount, false);
+        emit Transfer(addrFrom, addrTo, nNetAmount, false);
         
         // Transfer fee
         if(nFee>0){
