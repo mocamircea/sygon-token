@@ -243,12 +243,14 @@ contract SYGONtoken {
                 bConditionalTransferSuccess = true;
             }else{
                 if(splitWeightsValid(addrTo)) {  // check if splitter is correctly defined
-                    transferSplit(addrTo, executeTransfer(addrFrom, addrTo, nAmount));
+                    executeTransferNoFee(addrFrom, addrTo, nAmount);
+                    transferSplit(addrTo, nAmount);
                     bConditionalTransferSuccess = true;
                 }
             }
         }else {  // send to alias target
-            executeTransfer(addrFrom, addrAliasTarget, nAmount);
+            executeTransferNoFee(addrFrom, addrTo, nAmount);
+            executeTransfer(addrTo, addrAliasTarget, nAmount);
             bConditionalTransferSuccess = true;
         }
     }
@@ -351,6 +353,11 @@ contract SYGONtoken {
         nRetNetAmount = nNetAmount;
     }
 
+    function executeTransferNoFee(address addrFrom, address addrTo, uint256 nAmount) private {
+        balances[addrFrom] -= nAmount;
+        balances[addrTo] += nAmount;
+        emit Transfer(addrFrom, addrTo, nAmount, false);
+    }
     
     // -----------------
     // (FOR TOKEN RELEASE) - EXPENDITURE DESTINATIONS
