@@ -473,7 +473,7 @@ contract SYGONtoken {
     // Add new alias
     
     function addAlias() public 
-        ForbidCreator NotAlias(msg.sender) NotReleaseAddress(msg.sender) returns (bool bAddAliasSuccess) {
+        ForbidCreator NotAlias(msg.sender) NotReleaseAddress(msg.sender) NotFromFees(msg.sender) returns (bool bAddAliasSuccess) {
         
         require(msg.sender != addrAliasTarget);
         aliases[msg.sender]=uint40(block.timestamp);
