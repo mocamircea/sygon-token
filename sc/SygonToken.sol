@@ -74,6 +74,7 @@ contract SYGONtoken {
     event ChangeEDWeight(string indexed sEDName, uint8 nNewWeight);
     event ChangeBurnFromFeeQuota(address indexed addrFeeManager, uint8 nNewQuota);
     event ChangeFeesAddress(address indexed addrNewAddress);
+    event PrintSplitterEntry(address addrSplitted, uint8 nEntryIndex, address addrEntryAddress, uint16 nEntryWeight);
     
     
     modifier OnlyCreator () {
@@ -273,7 +274,7 @@ contract SYGONtoken {
         // Check availability from Total Remaining Supply to be Released (TRSR)
         
         require(balances[msg.sender] >= nTotalAmount);
-        
+            
         // Transfer
         
         // To Explicit Destination: DEV
@@ -283,7 +284,7 @@ contract SYGONtoken {
         // To Implicit Destinations
         executeTransfer(msg.sender, releaseDestinations["PRO"].addr, nAmount_PRO);
         emit TransferTokenRelease(releaseDestinations["PRO"].addr, nProjectID, releaseDestinations["PRO"].nID, nInstallmentID);
-        
+                                            
         executeTransfer(msg.sender, releaseDestinations["OPR"].addr, nAmount_OPR);
         emit TransferTokenRelease(releaseDestinations["OPR"].addr, nProjectID, releaseDestinations["OPR"].nID, nInstallmentID);
         
@@ -300,7 +301,7 @@ contract SYGONtoken {
         bTransferTokenReleaseSuccess = true;
     }
     
-    function transferSplit(address addrFrom, uint256 nAmount) internal {
+    function transferSplit (address addrFrom, uint256 nAmount) internal {
         
             uint256 nCalcAmount = (nAmount * splitters[addrFrom].destinations[0].weight)/1000;
             executeTransfer(addrFrom, splitters[addrFrom].destinations[0].addr, nCalcAmount);
@@ -320,14 +321,18 @@ contract SYGONtoken {
         require(isSplitter(addrTo));
         require(balances[addrAliasTarget] >= nAmount);
         
-        if(msg.sender == addrAliasTarget){
-           executeTransfer(addrAliasTarget, addrTo, nAmount);
-           bTransferFromAliasTargetSuccess = true;
-        }else{ // delegated transfer
-            if(allowances[addrAliasTarget][msg.sender]>=nAmount){
-                executeTransfer(addrAliasTarget, addrTo, nAmount);
-                allowances[addrAliasTarget][msg.sender] -= nAmount;
+        if(splitWeightsValid(addrTo)) {  // check if splitter is correctly defined
+            if(msg.sender == addrAliasTarget){
+                executeTransferNoFee(addrAliasTarget, addrTo, nAmount);
+                transferSplit(addrTo, nAmount);
                 bTransferFromAliasTargetSuccess = true;
+            }else{ // delegated transfer
+                if(allowances[addrAliasTarget][msg.sender]>=nAmount){
+                    executeTransferNoFee(addrAliasTarget, addrTo, nAmount);
+                    transferSplit(addrTo, nAmount);
+                    allowances[addrAliasTarget][msg.sender] -= nAmount;
+                    bTransferFromAliasTargetSuccess = true;
+                }
             }
         }
     }
@@ -561,6 +566,7 @@ contract SYGONtoken {
     function isSplitter(address addr) public view returns (bool bAddrIsSplitter) {
         return splitters[addr].nExpiry != 0;
     }
+
 
     
     
