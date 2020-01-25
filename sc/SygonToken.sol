@@ -567,7 +567,15 @@ contract SYGONtoken {
         return splitters[addr].nExpiry != 0;
     }
 
-
+    // List splitter entries
+    
+    function listSplitter(address addrSplitted) public {
+        if(isSplitter(addrSplitted)) {
+            for(uint8 i = 0; i<=6; i++){
+                emit PrintSplitterEntry(addrSplitted,i,splitters[addrSplitted].destinations[i].addr,splitters[addrSplitted].destinations[i].weight);
+            }
+        }
+    }
     
     
     // -----------------
